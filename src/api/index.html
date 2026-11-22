@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocsRAG — Documentation Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* =====================================================================
+       Minimalist Dark Canvas Engineering Theme (Clean, Restrained, Non-Slop)
+       ===================================================================== */
+    :root {
+      /* Surface & Canvas Hierarchy */
+      --canvas: #090909;
+      --surface-1: #121212;
+      --surface-2: #181818;
+      --surface-3: #202020;
+      --hairline: #222222;
+      --hairline-soft: #171717;
+      --hairline-strong: #303030;
+
+      /* Ink / Typography */
+      --primary: #ffffff;
+      --on-primary: #000000;
+      --ink: #ededed;
+      --ink-muted: #888888;
+      --ink-faint: #555555;
+
+      /* Single Functional Accent */
+      --accent-blue: #0099ff;
+
+      /* Semantics (Understated) */
+      --semantic-success: #22c55e;
+      --semantic-danger: #ef4444;
+
+      /* Radius Scale */
+      --radius-xs: 4px;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 18px;
+      --radius-pill: 100px;
+      --radius-full: 9999px;
+
+      /* Elevation / Shadows */
+      --shadow-subtle: 0px 4px 16px rgba(0, 0, 0, 0.4);
+      --shadow-card: inset 0px 1px 0px rgba(255, 255, 255, 0.05), 0px 16px 36px -12px rgba(0, 0, 0, 0.6);
+      --shadow-focus: 0 0 0 1px var(--accent-blue), 0 0 0 3px rgba(0, 153, 255, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-feature-settings: "cv01" on, "cv05" on, "cv09" on, "cv11" on, "ss03" on, "ss07" on, "dlig" on, "tnum" on;
+      background-color: var(--canvas);
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      letter-spacing: -0.15px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--hairline);
+      border-radius: var(--radius-pill);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #444444;
+    }
+
+    /* SVG Icon Helpers */
+    .icon {
+      display: inline-block;
+      vertical-align: middle;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke: currentColor;
+    }
+
+    /* =====================================================================
+       Top Nav Bar
+       ===================================================================== */
+    header.top-nav {
+      height: 52px;
+      background: var(--canvas);
+      border-bottom: 1px solid var(--hairline-soft);
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      background: var(--surface-1);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--ink);
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+    }
+
+    .brand-meta {
+      font-size: 12.5px;
+      font-weight: 400;
+      color: var(--ink-muted);
+      letter-spacing: -0.1px;
+      border-left: 1px solid var(--hairline);
+      padding-left: 10px;
+      margin-left: 2px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      color: var(--ink-muted);
+      font-weight: 500;
+      padding: 4px 10px;
+      background: var(--surface-1);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-pill);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: var(--radius-full);
+      background: var(--semantic-success);
+    }
+
+    /* Buttons */
+    .btn-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.0;
+      letter-spacing: -0.14px;
+      border-radius: var(--radius-pill);
+      padding: 8px 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      min-height: 34px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+      border: 1px solid var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: #e2e2e2;
+      border-color: #e2e2e2;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary:disabled {
+      background: #282828;
+      border-color: #282828;
+      color: #666666;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: var(--surface-1);
+      color: var(--ink);
+      border: 1px solid var(--hairline);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-2);
+      border-color: var(--hairline-strong);
+    }
+
+    .btn-translucent {
+      background: var(--surface-1);
+      color: var(--ink-muted);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-pill);
+      padding: 7px 12px;
+      font-size: 12.5px;
+      font-weight: 400;
+      letter-spacing: -0.1px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-translucent:hover {
+      background: var(--surface-2);
+      border-color: var(--hairline-strong);
+      color: var(--ink);
+    }
+
+    /* =====================================================================
+       Layout Container
+       ===================================================================== */
+    .layout-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* =====================================================================
+       Sidebar: Controls & Telemetry
+       ===================================================================== */
+    aside.sidebar {
+      width: 300px;
+      background: var(--canvas);
+      border-right: 1px solid var(--hairline-soft);
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      flex-shrink: 0;
+      overflow-y: auto;
+      z-index: 5;
+    }
+
+    .sidebar-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-faint);
+      margin-bottom: 8px;
+    }
+
+    .control-block {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .control-label {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      letter-spacing: -0.1px;
+    }
+
+    .control-desc {
+      font-size: 11.5px;
+      color: var(--ink-muted);
+      line-height: 1.35;
+      letter-spacing: -0.1px;
+    }
+
+    /* Segmented Pill Control */
+    .segmented-control {
+      display: flex;
+      background: var(--surface-1);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-pill);
+      padding: 2px;
+      gap: 2px;
+    }
+
+    .segmented-tab {
+      flex: 1;
+      background: transparent;
+      color: var(--ink-muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.0;
+      letter-spacing: -0.1px;
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: 7px 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .segmented-tab.selected {
+      background: var(--surface-3);
+      color: var(--ink);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    }
+
+    .segmented-tab:hover:not(.selected) {
+      color: var(--ink);
+    }
+
+    /* Clean Toggle Switch */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-1);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+
+    .toggle-row:hover {
+      border-color: var(--hairline-strong);
+    }
+
+    .toggle-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .toggle-label {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.1px;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 38px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .switch-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #242424;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-pill);
+      transition: .18s ease;
+    }
+
+    .switch-slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 2px;
+      bottom: 2px;
+      background-color: #ededed;
+      border-radius: 50%;
+      transition: .18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    input:checked + .switch-slider {
+      background-color: var(--accent-blue);
+      border-color: var(--accent-blue);
+    }
+
+    input:checked + .switch-slider:before {
+      transform: translateX(18px);
+      background-color: #ffffff;
+    }
+
+    /* Range Slider */
+    .slider-container {
+      background: var(--surface-1);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .slider-val-badge {
+      background: var(--surface-2);
+      border: 1px solid var(--hairline);
+      color: var(--ink);
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 3px;
+      background: var(--hairline);
+      border-radius: var(--radius-pill);
+      outline: none;
+      margin: 4px 0;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 15px;
+      height: 15px;
+      border-radius: var(--radius-full);
+      background: var(--primary);
+      cursor: pointer;
+      border: 2px solid var(--canvas);
+      transition: transform 0.1s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.12);
+    }
+
+    /* Telemetry Card */
+    .info-card {
+      background: var(--surface-1);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      line-height: 1.2;
+    }
+
+    .info-name {
+      color: var(--ink-muted);
+      letter-spacing: -0.1px;
+    }
+
+    .info-val {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--ink);
+      font-weight: 500;
+      font-size: 10.5px;
+    }
+
+    /* =====================================================================
+       Main Chat Canvas
+       ===================================================================== */
+    main.chat-canvas {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--canvas);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chat-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 24px 130px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      max-width: 860px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Clean Monochromatic Overview Card (Replaces AI slop gradient) */
+    .overview-card,
+    .spotlight-card {
+      background: var(--surface-1);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      position: relative;
+      box-shadow: var(--shadow-card);
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .spotlight-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .spotlight-eyebrow::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: var(--radius-full);
+      background: var(--ink-faint);
+      display: inline-block;
+    }
+
+    .spotlight-headline {
+      font-size: 26px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.8px;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .spotlight-subhead {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.5;
+      letter-spacing: -0.12px;
+      color: var(--ink-muted);
+      max-width: 640px;
+      margin-bottom: 20px;
+    }
+
+    .spotlight-feature-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .feature-chip {
+      background: var(--surface-2);
+      border: 1px solid var(--hairline);
+      color: var(--ink-muted);
+      font-size: 11.5px;
+      font-weight: 500;
+      letter-spacing: -0.1px;
+      padding: 5px 11px;
+      border-radius: var(--radius-pill);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .feature-chip:hover {
+      border-color: var(--hairline-strong);
+      color: var(--ink);
+    }
+
+    .feature-chip .chip-icon {
+      stroke: var(--ink-muted);
+    }
+
+    .feature-chip:hover .chip-icon {
+      stroke: var(--ink);
+    }
+
+    /* Suggestions Section */
+    .suggestions-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .suggestions-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-faint);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .suggestions-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    /* Message Groups */
+    .msg-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      animation: fadeIn 0.2s ease-out;
+      width: 100%;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* User Message */
+    .msg-user-container {
+      align-self: flex-end;
+      max-width: 78%;
+      background: var(--primary);
+      border: 1px solid var(--primary);
+      border-radius: var(--radius-lg);
+      border-bottom-right-radius: var(--radius-xs);
+      padding: 12px 18px;
+      color: var(--on-primary);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.45;
+      box-shadow: 0 4px 18px rgba(255, 255, 255, 0.08);
+    }
+
+    /* Assistant Message */
+    .msg-assistant-card {
+      align-self: flex-start;
+      width: 100%;
+      background: var(--surface-1);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .msg-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -0.1px;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .msg-content {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: #dfdfdf;
+    }
+
+    .msg-content p {
+      margin-bottom: 12px;
+    }
+
+    .msg-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    .msg-content strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .msg-content code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: #0d0d0d;
+      border: 1px solid var(--hairline);
+      padding: 2px 5px;
+      border-radius: var(--radius-xs);
+      color: #cbd5e1;
+    }
+
+    .msg-content pre {
+      background: #080808;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin: 12px 0;
+      overflow-x: auto;
+    }
+
+    .msg-content pre code {
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: #f1f5f9;
+    }
+
+    /* Citation Tag */
+    .citation-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent-blue);
+      background: rgba(0, 153, 255, 0.06);
+      border: 1px solid rgba(0, 153, 255, 0.2);
+      padding: 1px 5px;
+      border-radius: var(--radius-xs);
+      display: inline-block;
+      margin: 0 2px;
+      font-weight: 500;
+    }
+
+    /* Meta Bar */
+    .msg-meta-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px solid var(--hairline-soft);
+      font-size: 11.5px;
+      color: var(--ink-muted);
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      font-size: 11.5px;
+      font-weight: 500;
+      letter-spacing: -0.1px;
+    }
+
+    .pill-grounded-true {
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      color: var(--semantic-success);
+    }
+
+    .pill-grounded-false {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: var(--semantic-danger);
+    }
+
+    .pill-latency {
+      background: var(--surface-2);
+      border: 1px solid var(--hairline);
+      color: var(--ink-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+
+    .sources-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--hairline);
+      color: var(--ink-muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 11.5px;
+      font-weight: 500;
+      letter-spacing: -0.1px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-left: auto;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      transition: all 0.15s ease;
+    }
+
+    .sources-toggle-btn:hover {
+      background: var(--surface-2);
+      border-color: var(--hairline-strong);
+      color: var(--ink);
+    }
+
+    .sources-toggle-btn .chevron-icon {
+      transition: transform 0.18s ease;
+    }
+
+    .sources-toggle-btn.open .chevron-icon {
+      transform: rotate(180deg);
+    }
+
+    /* Sources Drawer */
+    .sources-tray {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--hairline);
+    }
+
+    .source-card {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      transition: border-color 0.15s ease;
+    }
+
+    .source-card:hover {
+      border-color: var(--hairline-strong);
+    }
+
+    .source-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+
+    .source-doc-id {
+      color: #93c5fd;
+      font-weight: 500;
+      word-break: break-all;
+    }
+
+    .source-score {
+      color: var(--ink-muted);
+      background: var(--surface-1);
+      border: 1px solid var(--hairline);
+      padding: 1px 6px;
+      border-radius: var(--radius-pill);
+      font-size: 10px;
+    }
+
+    .source-snippet {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      line-height: 1.45;
+      color: #94a3b8;
+      white-space: pre-wrap;
+      max-height: 130px;
+      overflow-y: auto;
+      background: #050505;
+      border: 1px solid #141414;
+      padding: 8px 10px;
+      border-radius: var(--radius-xs);
+    }
+
+    /* Loading Shimmer Card */
+    .loading-pulse {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink-muted);
+      font-size: 13px;
+    }
+
+    .loading-spinner {
+      width: 15px;
+      height: 15px;
+      border: 2px solid var(--hairline);
+      border-top-color: var(--ink);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* =====================================================================
+       Floating Input Dock
+       ===================================================================== */
+    .input-dock {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 48px);
+      max-width: 820px;
+      z-index: 20;
+    }
+
+    .input-pill-wrapper {
+      background: rgba(18, 18, 18, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-pill);
+      padding: 5px 6px 5px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+      transition: all 0.15s ease;
+    }
+
+    .input-pill-wrapper:focus-within {
+      border-color: var(--hairline-strong);
+      box-shadow: var(--shadow-focus), 0 12px 32px rgba(0, 0, 0, 0.6);
+    }
+
+    .query-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      letter-spacing: -0.15px;
+    }
+
+    .query-input::placeholder {
+      color: var(--ink-faint);
+    }
+
+    .kbd-hint {
+      font-size: 10.5px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      color: var(--ink-faint);
+      background: var(--surface-2);
+      border: 1px solid var(--hairline);
+      padding: 2px 5px;
+      border-radius: var(--radius-xs);
+      letter-spacing: 0.02em;
+      pointer-events: none;
+    }
+
+    /* =====================================================================
+       Benchmark Modal
+       ===================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .modal-card {
+      background: var(--surface-1);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      max-width: 780px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+    }
+
+    .btn-close {
+      width: 28px;
+      height: 28px;
+      background: var(--surface-2);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-full);
+      color: var(--ink-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .btn-close:hover {
+      color: var(--ink);
+      border-color: var(--hairline-strong);
+    }
+
+    .benchmark-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    .benchmark-table th {
+      text-align: left;
+      color: var(--ink-muted);
+      font-weight: 500;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--hairline);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .benchmark-table td {
+      padding: 10px;
+      border-bottom: 1px solid var(--hairline-soft);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+    }
+
+    .benchmark-table tr:hover td {
+      background: var(--surface-2);
+    }
+
+    /* Responsive */
+    @media (max-width: 860px) {
+      aside.sidebar {
+        display: none;
+      }
+      .brand-meta {
+        display: none;
+      }
+      .chat-scroll {
+        padding: 18px 14px 120px 14px;
+      }
+      .input-dock {
+        width: calc(100% - 28px);
+      }
+      .overview-card, .spotlight-card {
+        padding: 20px;
+      }
+      .spotlight-headline {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Nav Bar -->
+  <header class="top-nav">
+    <a href="/" class="brand">
+      <div class="brand-mark">//</div>
+      <div>
+        <div class="brand-title">DocsRAG</div>
+      </div>
+      <div class="brand-meta">Documentation Assistant</div>
+    </a>
+
+    <div class="nav-actions">
+      <div class="status-indicator">
+        <span class="status-dot"></span>
+        <span>Operational</span>
+      </div>
+      <button class="btn-pill btn-secondary" onclick="openBenchmarkModal()">
+        <span>Benchmark</span>
+        <svg class="icon" width="10" height="10" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+      </button>
+      <a href="/docs" target="_blank" class="btn-pill btn-primary">
+        <span>API Docs</span>
+        <svg class="icon" width="10" height="10" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <div class="layout-container">
+    <!-- Left Sidebar: Controls & System Spec -->
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-section-title">Pipeline Architecture</div>
+        <div class="control-block">
+          <div class="control-label">
+            <span>Chunking Strategy</span>
+          </div>
+          <!-- Segmented Tab Control -->
+          <div class="segmented-control">
+            <button type="button" class="segmented-tab selected" id="tab-recursive" onclick="setChunking('recursive')">
+              Recursive
+            </button>
+            <button type="button" class="segmented-tab" id="tab-header" onclick="setChunking('header_aware')">
+              Header-Aware
+            </button>
+          </div>
+          <!-- Hidden input holding current value for backend POST /ask -->
+          <input type="hidden" id="chunking" value="recursive">
+          <div class="control-desc" id="chunking-desc">
+            Character and paragraph split (~1,000 chars) with 200 overlap.
+          </div>
+        </div>
+      </div>
+
+      <div class="control-block">
+        <div class="sidebar-section-title">Ranking Model</div>
+        <label class="toggle-row" for="reranker">
+          <div class="toggle-info">
+            <span class="toggle-label">Neural Reranker</span>
+            <span class="control-desc">ms-marco-MiniLM-L-6-v2</span>
+          </div>
+          <span class="switch">
+            <input type="checkbox" id="reranker" checked>
+            <span class="switch-slider"></span>
+          </span>
+        </label>
+      </div>
+
+      <div class="control-block">
+        <div class="sidebar-section-title">Context Depth</div>
+        <div class="slider-container">
+          <div class="slider-header">
+            <span class="control-label">Top-K Documents</span>
+            <span class="slider-val-badge" id="top_k_val">5</span>
+          </div>
+          <input type="range" id="top_k" min="1" max="10" value="5" oninput="document.getElementById('top_k_val').innerText = this.value">
+          <div class="control-desc">
+            Candidate context chunks supplied to generator.
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px;">
+        <div class="sidebar-section-title">System Telemetry</div>
+        <div class="info-card">
+          <div class="info-item">
+            <span class="info-name">Generator</span>
+            <span class="info-val">GPT-4o-mini / Groq</span>
+          </div>
+          <div class="info-item">
+            <span class="info-name">Embedding</span>
+            <span class="info-val">all-MiniLM-L6-v2</span>
+          </div>
+          <div class="info-item">
+            <span class="info-name">Vector DB</span>
+            <span class="info-val">ChromaDB (Cosine)</span>
+          </div>
+          <div class="info-item">
+            <span class="info-name">Verification</span>
+            <span class="info-val">LLM-as-a-Judge</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Chat Canvas -->
+    <main class="chat-canvas">
+      <div class="chat-scroll" id="chat">
+
+        <!-- Clean Restrained Overview Card (No AI Slop) -->
+        <div class="overview-card" id="welcome-card">
+          <div class="spotlight-eyebrow">Documentation Assistant</div>
+          <h2 class="spotlight-headline">Grounded documentation search.</h2>
+          <p class="spotlight-subhead">
+            Ask technical questions over the ingested corpus. Responses are strictly grounded against retrieved documentation chunks and evaluated for faithfulness.
+          </p>
+
+          <div class="spotlight-feature-row">
+            <span class="feature-chip">
+              <svg class="icon chip-icon" width="12" height="12" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Verified Grounding</span>
+            </span>
+            <span class="feature-chip">
+              <svg class="icon chip-icon" width="12" height="12" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Sub-second Latency</span>
+            </span>
+            <span class="feature-chip">
+              <svg class="icon chip-icon" width="12" height="12" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+              <span>Cross-Encoder Reranked</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Sample Prompts -->
+        <div class="suggestions-section" id="suggestions-container">
+          <div class="suggestions-label">Suggested Queries</div>
+          <div class="suggestions-grid">
+            <button class="btn-translucent" onclick="sendSuggestion('What is LangChain?')">
+              What is LangChain?
+            </button>
+            <button class="btn-translucent" onclick="sendSuggestion('How do I install LangChain?')">
+              How do I install LangChain?
+            </button>
+            <button class="btn-translucent" onclick="sendSuggestion('What is the difference between a Tool and an Agent?')">
+              Difference between Tool and Agent
+            </button>
+            <button class="btn-translucent" onclick="sendSuggestion('What vectorstores are supported?')">
+              Supported vectorstores
+            </button>
+            <button class="btn-translucent" onclick="sendSuggestion('How do I stream responses in LangChain?')">
+              Streaming responses
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Floating Bottom Docked Input Bar -->
+      <div class="input-dock">
+        <div class="input-pill-wrapper">
+          <input
+            type="text"
+            id="prompt"
+            class="query-input"
+            placeholder="Ask a technical question about the documentation..."
+            autocomplete="off"
+            onkeydown="if(event.key==='Enter') submitQuestion()"
+          >
+          <span class="kbd-hint">Return ↵</span>
+          <button class="btn-pill btn-primary" id="sendBtn" onclick="submitQuestion()">
+            <span>Send</span>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Benchmark History Modal -->
+  <div class="modal-backdrop" id="benchmark-modal" onclick="if(event.target===this) closeBenchmarkModal()">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">Evaluation Benchmark</h3>
+          <p style="font-size: 12.5px; color: var(--ink-muted); margin-top: 4px;">
+            Recent retrieval accuracy and faithfulness runs logged in SQLite.
+          </p>
+        </div>
+        <button class="btn-close" onclick="closeBenchmarkModal()">
+          <svg class="icon" width="12" height="12" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div id="benchmark-table-container">
+        <div style="padding: 24px; text-align: center; color: var(--ink-muted);">Loading benchmark logs...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Segmented Chunking Controller
+    function setChunking(mode) {
+      document.getElementById('chunking').value = mode;
+      const recTab = document.getElementById('tab-recursive');
+      const hdrTab = document.getElementById('tab-header');
+      const desc = document.getElementById('chunking-desc');
+
+      if (mode === 'recursive') {
+        recTab.classList.add('selected');
+        hdrTab.classList.remove('selected');
+        desc.innerText = 'Character and paragraph split (~1,000 chars) with 200 overlap.';
+      } else {
+        hdrTab.classList.add('selected');
+        recTab.classList.remove('selected');
+        desc.innerText = 'Structured split based on Markdown `#` headers and sections.';
+      }
+    }
+
+    function sendSuggestion(q) {
+      document.getElementById('prompt').value = q;
+      submitQuestion();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // Markdown Formatter with Code, Citations & Headers
+    function formatMarkdown(text) {
+      if (!text) return '';
+      let formatted = escapeHtml(text);
+
+      // Code blocks ```lang\n...```
+      formatted = formatted.replace(/```(?:[a-zA-Z0-9_\-]+)?\n([\s\S]*?)```/g, function(match, code) {
+        return '<pre><code>' + code.trim() + '</code></pre>';
+      });
+
+      // Inline code `...`
+      formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+      // Citations [doc_id#chunk_index]
+      formatted = formatted.replace(/\[([a-zA-Z0-9_\-\.\/]+#\d+)\]/g, '<span class="citation-tag">[$1]</span>');
+
+      // Bold **text**
+      formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+      // Italic *text*
+      formatted = formatted.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+      // Bullet lists
+      formatted = formatted.replace(/(?:^|\n)\s*[-*]\s+(.+)/g, '<br>&bull; $1');
+
+      // Line breaks
+      formatted = formatted.replace(/\n\n/g, '<br><br>');
+      formatted = formatted.replace(/\n/g, '<br>');
+
+      return formatted;
+    }
+
+    async function submitQuestion() {
+      const input = document.getElementById('prompt');
+      const question = input.value.trim();
+      if (!question) return;
+
+      const chat = document.getElementById('chat');
+      const sendBtn = document.getElementById('sendBtn');
+
+      // Hide welcome card and suggestions on first query for clean focus
+      const welcomeCard = document.getElementById('welcome-card');
+      const suggestions = document.getElementById('suggestions-container');
+      if (welcomeCard) welcomeCard.style.display = 'none';
+      if (suggestions) suggestions.style.display = 'none';
+
+      // 1. Add User Message
+      const userGroup = document.createElement('div');
+      userGroup.className = 'msg-group';
+      userGroup.innerHTML = `
+        <div class="msg-user-container">
+          ${escapeHtml(question)}
+        </div>
+      `;
+      chat.appendChild(userGroup);
+
+      input.value = '';
+      sendBtn.disabled = true;
+
+      // 2. Add Loading Message
+      const loadingGroup = document.createElement('div');
+      loadingGroup.className = 'msg-group';
+      loadingGroup.id = 'active-loading';
+      loadingGroup.innerHTML = `
+        <div class="msg-assistant-card">
+          <div class="loading-pulse">
+            <div class="loading-spinner"></div>
+            <span>Searching documentation chunks and verifying groundedness...</span>
+          </div>
+        </div>
+      `;
+      chat.appendChild(loadingGroup);
+      chat.scrollTop = chat.scrollHeight;
+
+      const payload = {
+        question: question,
+        chunking: document.getElementById('chunking').value,
+        use_reranker: document.getElementById('reranker').checked,
+        top_k: parseInt(document.getElementById('top_k').value)
+      };
+
+      try {
+        const res = await fetch('/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          throw new Error(`Server returned HTTP ${res.status}: ${res.statusText}`);
+        }
+
+        const data = await res.json();
+        const loader = document.getElementById('active-loading');
+        if (loader) loader.remove();
+
+        const assistGroup = document.createElement('div');
+        assistGroup.className = 'msg-group';
+
+        const isGrounded = data.grounded === true;
+        const groundedPill = isGrounded
+          ? `<span class="meta-pill pill-grounded-true">
+               <svg class="icon" width="11" height="11" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+               <span>Grounded</span>
+             </span>`
+          : `<span class="meta-pill pill-grounded-false">
+               <svg class="icon" width="11" height="11" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+               <span>Unverified</span>
+             </span>`;
+
+        let html = `
+          <div class="msg-assistant-card">
+            <div class="msg-header">
+              <span>DocsRAG Response</span>
+            </div>
+
+            <div class="msg-content">
+              ${formatMarkdown(data.answer)}
+            </div>
+
+            <div class="msg-meta-bar">
+              ${groundedPill}
+              <span class="meta-pill pill-latency">
+                <span>${data.latency_ms.toFixed(0)} ms</span>
+              </span>
+              <button class="sources-toggle-btn" onclick="toggleSources(this)">
+                <span>${data.sources.length} sources</span>
+                <svg class="icon chevron-icon" width="11" height="11" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+            </div>
+
+            <div class="sources-tray" style="display: none;">
+        `;
+
+        data.sources.forEach((s) => {
+          html += `
+            <div class="source-card">
+              <div class="source-card-header">
+                <span class="source-doc-id">[${escapeHtml(s.doc_id)}#${s.chunk_index}]</span>
+                <span class="source-score">Relevance ${s.score.toFixed(3)}</span>
+              </div>
+              <div class="source-snippet">${escapeHtml(s.text)}</div>
+            </div>
+          `;
+        });
+
+        html += `
+            </div>
+          </div>
+        `;
+
+        assistGroup.innerHTML = html;
+        chat.appendChild(assistGroup);
+      } catch (err) {
+        const loader = document.getElementById('active-loading');
+        if (loader) {
+          loader.innerHTML = `
+            <div class="msg-assistant-card" style="border-color: rgba(239,68,68,0.3);">
+              <div style="color: var(--semantic-danger); font-size: 13.5px;">
+                <strong>Query Error:</strong> ${escapeHtml(err.message)}
+              </div>
+            </div>
+          `;
+        }
+      } finally {
+        sendBtn.disabled = false;
+        chat.scrollTop = chat.scrollHeight;
+        input.focus();
+      }
+    }
+
+    function toggleSources(btn) {
+      const card = btn.closest('.msg-assistant-card');
+      const tray = card.querySelector('.sources-tray');
+      const isOpen = tray.style.display !== 'none';
+      if (isOpen) {
+        tray.style.display = 'none';
+        btn.classList.remove('open');
+      } else {
+        tray.style.display = 'flex';
+        btn.classList.add('open');
+      }
+    }
+
+    // Benchmark Modal Controller
+    async function openBenchmarkModal() {
+      const modal = document.getElementById('benchmark-modal');
+      const container = document.getElementById('benchmark-table-container');
+      modal.style.display = 'flex';
+
+      try {
+        const res = await fetch('/eval/latest?n=10');
+        if (!res.ok) throw new Error('Failed to load benchmark rows.');
+        const rows = await res.json();
+
+        if (!rows || rows.length === 0) {
+          container.innerHTML = `
+            <div style="padding: 32px; text-align: center; color: var(--ink-muted);">
+              No evaluation runs found in SQLite yet.<br>
+              <span style="font-size: 12px; margin-top: 6px; display: inline-block;">
+                Run <code>python scripts/compare_configs.py</code> to benchmark all 4 configurations.
+              </span>
+            </div>
+          `;
+          return;
+        }
+
+        let tableHtml = `
+          <table class="benchmark-table">
+            <thead>
+              <tr>
+                <th>Config</th>
+                <th>Hit@1</th>
+                <th>Hit@5</th>
+                <th>Hit@10</th>
+                <th>MRR</th>
+                <th>Faithfulness</th>
+                <th>Latency</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+
+        rows.forEach(r => {
+          tableHtml += `
+            <tr>
+              <td style="color: var(--ink); font-weight: 500;">${escapeHtml(r.config)}</td>
+              <td>${(r.hit_at_1 * 100).toFixed(0)}%</td>
+              <td>${(r.hit_at_5 * 100).toFixed(0)}%</td>
+              <td>${(r.hit_at_10 * 100).toFixed(0)}%</td>
+              <td>${r.mrr.toFixed(3)}</td>
+              <td style="color: ${r.faithfulness >= 0.8 ? 'var(--semantic-success)' : 'inherit'};">
+                ${(r.faithfulness * 100).toFixed(0)}%
+              </td>
+              <td>${r.avg_latency_ms.toFixed(0)} ms</td>
+            </tr>
+          `;
+        });
+
+        tableHtml += `</tbody></table>`;
+        container.innerHTML = tableHtml;
+      } catch (e) {
+        container.innerHTML = `
+          <div style="padding: 24px; text-align: center; color: var(--semantic-danger);">
+            Could not fetch evaluation records: ${escapeHtml(e.message)}
+          </div>
+        `;
+      }
+    }
+
+    function closeBenchmarkModal() {
+      document.getElementById('benchmark-modal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
