@@ -23,6 +23,7 @@ class RAGAnswer(BaseModel):
     sources: list[Source]
     grounded: bool = Field(description="True when the answer is fully supported by retrieved context")
     latency_ms: float
+    session_id: str | None = None
 
 
 class QueryRequest(BaseModel):
@@ -30,6 +31,34 @@ class QueryRequest(BaseModel):
     chunking: Literal["recursive", "header_aware"] = "recursive"
     use_reranker: bool = True
     top_k: int = Field(default=5, ge=1, le=20)
+    corpus: Literal["all", "langchain", "user"] = "all"
+    session_id: str | None = None
+
+
+class DocumentItem(BaseModel):
+    filename: str
+    size_bytes: int
+    chunks: int
+    modified_at: float
+
+
+class ChatMessageItem(BaseModel):
+    id: int
+    session_id: str
+    role: str
+    content: str
+    sources: list[Source] = []
+    grounded: bool | None = None
+    latency_ms: float | None = None
+    timestamp: str | None = None
+
+
+class RawDocumentResponse(BaseModel):
+    doc_id: str
+    filename: str
+    source_type: str
+    content: str
+    size_bytes: int
 
 
 class EvalResult(BaseModel):

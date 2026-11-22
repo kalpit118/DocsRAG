@@ -36,6 +36,18 @@ CREATE TABLE IF NOT EXISTS eval_results (
     avg_latency_ms REAL,
     timestamp      TEXT DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS chat_messages (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id   TEXT NOT NULL,
+    role         TEXT NOT NULL,
+    content      TEXT NOT NULL,
+    sources_json TEXT,
+    grounded     INTEGER,
+    latency_ms   REAL,
+    timestamp    TEXT DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_chat_session ON chat_messages(session_id, id);
 """
 
 
@@ -96,3 +108,53 @@ def get_latest_evals(n: int = 10, db_path: str = _DB_PATH) -> list[EvalResult]:
             "SELECT * FROM eval_results ORDER BY id DESC LIMIT ?", (n,)
         ).fetchall()
     return [EvalResult(**dict(r)) for r in rows]
+
+
+def save_chat_message(
+    session_id: str,
+    role: str,
+    content: str,
+    sources: list[dict] | None = None,
+    grounded: bool | None = None,
+    latency_ms: float | None = None,
+    db_path: str = _DB_PATH,
+) -> int:
+    import json
+    sources_json = json.dumps(sources) if sources is not None else None
+    grounded_int = int(grounded) if grounded is not None else None
+    with _conn(db_path) as con:
+        cur = con.execute(
+            "INSERT INTO chat_messages (session_id, role, content, sources_json, grounded, latency_ms) "
+            "VALUES (?, ?, ?, ?, ?, ?)",
+            (session_id, role, content, sources_json, grounded_int, latency_ms),
+        )
+        return cur.lastrowid
+
+
+def get_session_messages(session_id: str, limit: int = 30, db_path: str = _DB_PATH) -> list[dict]:
+    import json
+    with _conn(db_path) as con:
+        rows = con.execute(
+            "SELECT * FROM chat_messages WHERE session_id = ? ORDER BY id ASC LIMIT ?",
+            (session_id, limit),
+        ).fetchall()
+    results = []
+    for r in rows:
+        d = dict(r)
+        if d.get("sources_json"):
+            try:
+                d["sources"] = json.loads(d["sources_json"])
+            except Exception:
+                d["sources"] = []
+        else:
+            d["sources"] = []
+        d["grounded"] = bool(d["grounded"]) if d["grounded"] is not None else None
+        results.append(d)
+    return results
+
+
+def clear_session_messages(session_id: str, db_path: str = _DB_PATH) -> int:
+    with _conn(db_path) as con:
+        cur = con.execute("DELETE FROM chat_messages WHERE session_id = ?", (session_id,))
+        return cur.rowcount
+

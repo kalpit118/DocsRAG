@@ -2,7 +2,7 @@
 
 <p align="center">
   <strong>Production-Grade Retrieval-Augmented Documentation Assistant</strong><br>
-  <em>Featuring Dual Chunking Strategies, Neural Cross-Encoder Reranking, Strict Citations, and LLM-as-a-Judge Verification</em>
+  <em>Featuring Custom Document Ingestion, Multi-Turn Memory, Real-Time SSE Streaming, Neural Reranking, In-App Context Viewer, and LLM-as-a-Judge Verification</em>
 </p>
 
 <p align="center">
@@ -11,7 +11,7 @@
   <a href="https://www.trychroma.com/"><img src="https://img.shields.io/badge/ChromaDB-Vector%20Store-E25A1C?style=for-the-badge&logo=chromadb&logoColor=white" alt="ChromaDB" /></a>
   <a href="https://huggingface.co/sentence-transformers"><img src="https://img.shields.io/badge/HuggingFace-Sentence--Transformers-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black" alt="HuggingFace" /></a>
   <a href="https://groq.com/"><img src="https://img.shields.io/badge/Inference-Groq%20%7C%20OpenAI-000000?style=for-the-badge" alt="Inference" /></a>
-  <a href="https://docs.pydantic.dev/"><img src="https://img.shields.io/badge/Pydantic-v2-E92063?style=for-the-badge&logo=pydantic&logoColor=white" alt="Pydantic v2" /></a>
+  <a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events"><img src="https://img.shields.io/badge/Streaming-SSE%20Tokens-0099FF?style=for-the-badge" alt="SSE Streaming" /></a>
   <a href="https://docs.pytest.org/"><img src="https://img.shields.io/badge/Tested%20With-Pytest-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white" alt="Pytest" /></a>
 </p>
 
@@ -19,27 +19,31 @@
 
 ## 📸 Output & Web Interface
 
-DocsRAG includes a built-in, dark-canvas engineering Web UI for live querying, dynamic pipeline reconfiguration, and real-time verification telemetry.
+DocsRAG includes a built-in, Framer-inspired minimalist dark-canvas Web UI for live technical querying, file uploading, dynamic pipeline reconfiguration, and real-time verification telemetry.
 
 <p align="center">
-  <img src="assets/webui.png" alt="DocsRAG Web UI & Telemetry Dashboard" width="100%" />
+  <img src="assets/webui.png" alt="DocsRAG Web UI & Context Viewer Dashboard" width="100%" />
 </p>
 
-<p align="center"><em>DocsRAG Web Interface: Live document retrieval, chunking strategy comparison, neural reranker toggle, inline source citations, groundedness validation, and sub-second latency telemetry.</em></p>
+<p align="center"><em>DocsRAG Production Web Interface: Multi-collection knowledge base scope switcher, custom document drag-and-drop dropzone, real-time SSE token streaming, slide-out document context reader with chunk highlighting, groundedness validation, and export menu.</em></p>
 
 ---
 
 ## 🌟 Overview
 
-**DocsRAG** is a production-style, end-to-end Retrieval-Augmented Generation (RAG) system engineered to answer complex questions across technical documentation repositories (e.g., LangChain docs) with **mathematically verified, cited, and schema-validated responses**.
+**DocsRAG** is an end-to-end, production-style Retrieval-Augmented Generation (RAG) system engineered to answer complex questions across technical documentation repositories and user-uploaded files with **mathematically verified, cited, and schema-validated responses**.
 
-Standard RAG architectures frequently hallucinate, retrieve irrelevant chunks, or fail to substantiate claims. DocsRAG solves this by implementing an **"Open-Book Examination"** paradigm:
-1. **Two-Stage Ingestion:** Implements both **Recursive Character Splitting** and **Markdown Header-Aware Semantic Splitting**.
-2. **Dense Vector Search:** Embeds documents into persistent **ChromaDB** collections via `all-MiniLM-L6-v2` (local) or `text-embedding-3-small` (OpenAI).
-3. **Cross-Encoder Neural Reranking:** Eliminates false positives by rescoring retrieved pairs with `cross-encoder/ms-marco-MiniLM-L-6-v2`.
-4. **Strict Context-Grounding:** Synthesizes answers under zero-hallucination prompts with inline chunk-level citations (`[file.md#chunk]`).
-5. **LLM-as-a-Judge Verification:** A secondary evaluator automatically audits every response against source context to compute a factual **groundedness score** (0.0 to 1.0).
-6. **Autonomous Agent Mode:** Multi-turn tool-calling loop (`retrieve_docs`) for iterative multi-hop reasoning.
+Standard RAG systems often hallucinate, retrieve out-of-context chunks, fail on conversational follow-ups, or lack source verification. DocsRAG solves these failure modes through an **"Open-Book Examination"** architecture:
+
+1. **Multi-Source Ingestion Pipeline:** Indexes pre-existing documentation and user-uploaded `.pdf` (via page-aware `pypdf`), `.md`, and `.txt` files into dual Chroma collections using **Recursive Character Splitting** and **Markdown Header-Aware Semantic Splitting**.
+2. **Dense Vector & Multi-Collection Retrieval:** Searches across base documentation and user uploads simultaneously with cosine distance normalization.
+3. **Multi-Turn Conversational Memory (2A):** Tracks conversation sessions in SQLite, reformulating ambiguous follow-up queries (e.g., *"When was it developed and by whom?"*) into standalone search queries before vector lookup.
+4. **Cross-Encoder Neural Reranking:** Filters false positives by rescoring candidate pairs using `cross-encoder/ms-marco-MiniLM-L-6-v2`.
+5. **Real-Time Token Streaming (2B):** Delivers incremental response tokens over Server-Sent Events (`POST /ask/stream`) for sub-second perceived latency.
+6. **Strict Context-Grounding:** Synthesizes answers under zero-hallucination prompts with inline chunk-level citations (`[file.md#chunk]`).
+7. **LLM-as-a-Judge Verification:** Automatically fact-checks generated answers against retrieved source context to produce an objective **faithfulness score** (0.0 to 1.0).
+8. **Slide-Out Full-Document Context Viewer (2D):** 1-click in-app drawer that opens directly from citation badges, source cards, or uploaded files, automatically scrolling to and highlighting the exact cited chunk.
+9. **Chat Session Export (2F):** Client-side export to formatted Markdown reports (`.md`) and machine-readable JSON audit logs (`.json`).
 
 ---
 
@@ -47,49 +51,57 @@ Standard RAG architectures frequently hallucinate, retrieve irrelevant chunks, o
 
 | Feature | Description | Component |
 |---|---|---|
+| **Custom Document Upload** | Drag-and-drop multi-file upload for `.pdf`, `.md`, and `.txt` files with automatic text extraction, chunking, and isolated Chroma vector indexing. | `src/ingest/user_docs.py` |
+| **Knowledge Base Scope Switcher** | Segmented control to target queries across **All** (docs + uploads), **Docs** (documentation only), or **Uploads** (user files only). | `src/api/index.html` |
+| **Multi-Turn Memory (2A)** | Conversation history persistence in SQLite with automated query reformulation for seamless follow-up questions. | `src/agent/memory.py` |
+| **Real-Time SSE Streaming (2B)** | Token-by-token generation via Server-Sent Events with structured `metadata`, `token`, and `done` payload events. | `src/api/main.py` |
+| **Slide-Out Context Viewer (2D)** | In-app reader opening from citation badges, auto-scrolling to and highlighting cited text chunks with path-traversal security guards. | `src/api/index.html` |
+| **Chat Session Export (2F)** | 1-click export of chat sessions into formatted Markdown reports (`.md`) or structured JSON audit logs (`.json`). | `src/api/index.html` |
 | **Dual Chunking Pipeline** | Switch between fixed-size recursive chunking (`1,000` chars, `200` overlap) and structural header-aware chunking (`#`, `##`, `###`). | `src/ingest/chunker.py` |
-| **Dense Vector Retrieval** | High-performance embedding and cosine similarity search over vector collections. | `src/retrieval/retriever.py` |
+| **Dense Vector Retrieval** | High-performance embedding and cosine similarity search over ChromaDB collections. | `src/retrieval/retriever.py` |
 | **Neural Cross-Encoder** | Deep relevance reranking using `ms-marco-MiniLM-L-6-v2` to filter top candidates before generation. | `src/retrieval/reranker.py` |
-| **Grounded Answer Generator** | OpenAI `gpt-4o-mini` or ultra-fast free `Groq` (`llama-3.3-70b-versatile`, `qwen`) generation with strict source citation rules. | `src/generation/generator.py` |
-| **LLM-as-a-Judge** | Automated fact-checking evaluator that audits answers against source chunks and computes faithfulness. | `src/eval/judge.py` |
+| **Grounded Answer Generator** | OpenAI `gpt-4o-mini` or ultra-fast free `Groq` (`llama-3.3-70b-versatile`) generation with strict citation rules. | `src/generation/generator.py` |
+| **LLM-as-a-Judge** | Automated evaluator that audits answers against source chunks and computes faithfulness. | `src/eval/judge.py` |
 | **Autonomous Agent Loop** | Multi-hop iterative reasoning using OpenAI function-calling with the `retrieve_docs` tool. | `src/agent/loop.py` |
-| **Full Audit Trail** | Persistent SQLite store logging every query, answer, grounding verdict, and latency profile. | `src/eval/logger.py` |
-| **Modern Web Dashboard** | Responsive, zero-dependency dark-mode interface with live pipeline controls and markdown rendering. | `src/api/index.html` |
-| **Production REST API** | Fully typed FastAPI endpoints with Pydantic v2 schemas and interactive Swagger UI (`/docs`). | `src/api/main.py` |
+| **Full Audit Trail** | Persistent SQLite store logging every query, answer, grounding verdict, latency profile, and chat message. | `src/eval/logger.py` |
 
 ---
 
 ## 🏗️ System Architecture
 
-DocsRAG operates across two coordinated phases: **Ingestion (Offline Indexing)** and **Query (Real-Time Retrieval & Verification)**.
+DocsRAG operates across two synchronized phases: **Ingestion (Offline & Dynamic Uploads)** and **Live Query (Retrieval, Memory, Streaming & Verification)**.
 
 ```mermaid
 flowchart TD
-    subgraph Phase1["Phase 1: Ingestion & Indexing Pipeline (scripts/ingest.py)"]
+    subgraph Ingestion["Phase 1: Multi-Source Ingestion Pipeline"]
         direction TB
-        A["Technical Documentation<br/>(data/docs/*.md, *.mdx)"] --> B["Document Loader<br/>(src/ingest/loader.py)"]
-        B --> C{"Chunking Strategy<br/>(src/ingest/chunker.py)"}
-        C -->|Strategy 1| D1["Recursive Character Split<br/>(1000 chars, 200 overlap)"]
-        C -->|Strategy 2| D2["Markdown Header-Aware Split<br/>(#, ##, ### section hierarchy)"]
-        D1 --> E["Embedding Generator<br/>(all-MiniLM-L6-v2 / OpenAI)"]
-        D2 --> E
-        E --> F[("ChromaDB Vector Store<br/>db/chroma/")]
+        Docs["Pre-indexed Documentation<br/>(data/docs/*.md, *.mdx)"] --> Loader["File Discovery Loader<br/>(src/ingest/loader.py)"]
+        Uploads["User Uploads (.pdf, .md, .txt)<br/>(POST /documents/upload)"] --> UserIngest["User Doc Extractor & PDF Parser<br/>(src/ingest/user_docs.py)"]
+        Loader --> Chunker{"Chunking Engine<br/>(Recursive vs Header-Aware)"}
+        UserIngest --> Chunker
+        Chunker --> Embedder["Embedding Generator<br/>(all-MiniLM-L6-v2 / OpenAI)"]
+        Embedder --> Chroma[("ChromaDB Collections<br/>langchain_docs_* & user_docs_*")]
     end
 
-    subgraph Phase2["Phase 2: Live Query, Rerank & Verification Pipeline"]
+    subgraph Query["Phase 2: Live Query, Memory, Streaming & Verification Pipeline"]
         direction TB
-        Q["User Query<br/>(Web UI / CLI / API)"] --> R["Dense Retriever<br/>(src/retrieval/retriever.py)"]
-        F -. Search Index .-> R
-        R -->|"Top-20 Chunks"| RR{"Neural Reranker Enabled?"}
-        RR -->|Yes| S["Cross-Encoder Reranker<br/>(ms-marco-MiniLM-L-6-v2)"]
-        RR -->|No| T["Top-K Raw Candidates"]
-        S -->|"Top 3-5 Chunks"| U["Strict Context Prompt Builder"]
-        T -->|"Top 3-5 Chunks"| U
-        U --> V["Answer Generator<br/>(Groq / GPT-4o-mini)"]
-        V --> W["Draft Answer + Citations<br/>[doc_id#chunk_index]"]
-        W --> J["LLM-as-a-Judge<br/>(src/eval/judge.py)"]
-        J -->|"Score & Grounding"| L[("Audit DB<br/>SQLite: db/eval.db")]
-        J --> OUT["Final Validated RAGAnswer<br/>(Grounded • Latency • Sources)"]
+        User["User Question & Session ID<br/>(Web UI / API / Stream)"] --> Memory{"Session History in SQLite?"}
+        Memory -->|Yes| Reformulate["Query Reformulator<br/>(src/agent/memory.py)"]
+        Memory -->|No| PlainQuery["Standalone Search Query"]
+        Reformulate --> ScopeFilter{"Corpus Scope Filter<br/>(All / Docs / Uploads)"}
+        PlainQuery --> ScopeFilter
+        ScopeFilter --> Retriever["Multi-Collection Dense Retriever<br/>(src/retrieval/retriever.py)"]
+        Chroma -. Vector Search .-> Retriever
+        Retriever -->|"Top Chunks"| RerankCheck{"Neural Reranker Enabled?"}
+        RerankCheck -->|Yes| Reranker["Cross-Encoder Reranker<br/>(ms-marco-MiniLM-L-6-v2)"]
+        RerankCheck -->|No| RawChunks["Top-K Candidate Chunks"]
+        Reranker --> Assembly["Strict Context Prompt Assembly"]
+        RawChunks --> Assembly
+        Assembly --> Generator["LLM Generator (Groq / GPT-4o-mini)<br/>Token-by-Token Streaming"]
+        Generator --> SSE["SSE Stream: metadata -> token -> done"]
+        SSE --> Judge["LLM-as-a-Judge Fact Checker<br/>(src/eval/judge.py)"]
+        Judge --> SQLite[("SQLite Persistence<br/>eval_logs & chat_messages")]
+        SSE --> Viewer["Slide-Out Context Viewer (2D)<br/>Highlight Cited Text Chunks"]
     end
 ```
 
@@ -99,16 +111,17 @@ flowchart TD
 
 DocsRAG offers four distinct ways to interact with the system:
 
-### 1. Interactive Web UI
-Launch the server and open `http://localhost:8000` in your browser. The web interface provides:
-- Live strategy switching: **Recursive** vs. **Header-Aware**.
-- Toggleable **Neural Cross-Encoder Reranker**.
-- Dynamic **Top-K Context Depth** slider.
-- Collapsible source citations displaying raw chunk text and match scores.
-- Real-time telemetry indicators (Groundedness pill, query latency in ms).
+### 1. Interactive Web Dashboard
+Launch the server and navigate to `http://localhost:8000` in your browser. The web interface provides:
+- **Knowledge Base Scope Switcher:** Seamlessly target queries across **All**, **Docs**, or **Uploads**.
+- **Custom Documents Drag & Drop:** Upload PDFs, Markdown, and text files directly, with live chunk metrics and 1-click deletion.
+- **Real-Time Token Streaming:** Watch responses materialize token-by-token with sub-second perceived latency.
+- **Slide-Out Context Viewer (2D):** Click any citation tag or source card to inspect the full document context with highlighted chunks.
+- **Top Navigation Controls:** `+ New Chat` to reset context, and `Export` to download Markdown reports (`.md`) or JSON audit logs (`.json`).
+- **Pipeline Controls:** Toggle between **Recursive** and **Header-Aware** chunking, enable/disable the **Neural Cross-Encoder Reranker**, and adjust **Top-K Context Depth**.
 
 ### 2. Command-Line Assistant (`ask.py`)
-Query the documentation instantly from your terminal without opening a browser:
+Query documentation instantly from your terminal without opening a browser:
 
 ```bash
 # Direct one-shot question
@@ -118,33 +131,30 @@ python ask.py "How do I install LangChain?"
 python ask.py
 ```
 
-```text
-============================================================
-ANSWER:
-============================================================
-To install LangChain, you can use either pip or conda:
+### 3. REST & SSE Streaming API
+Integrate DocsRAG with programmatic HTTP clients.
 
-Pip: pip install langchain
-Conda: conda install langchain -c conda-forge
-============================================================
-Grounded in Docs: True | Latency: 479 ms
-Sources cited (2):
-  • [get_started/installation.mdx#0] (score: 0.92)
-  • [get_started/installation.mdx#1] (score: 0.88)
-============================================================
-```
-
-### 3. REST API (`/ask`)
-Send HTTP requests via `curl` or any HTTP client:
-
+#### Standard Synchronous Query (`POST /ask`)
 ```bash
 curl -X POST http://localhost:8000/ask \
   -H "Content-Type: application/json" \
   -d '{
     "question": "What is LCEL?",
-    "chunking": "header_aware",
+    "chunking": "recursive",
+    "corpus": "all",
     "use_reranker": true,
     "top_k": 5
+  }'
+```
+
+#### Real-Time SSE Token Stream (`POST /ask/stream`)
+```bash
+curl -N -X POST http://localhost:8000/ask/stream \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "How do I create a custom tool?",
+    "session_id": "session-123",
+    "corpus": "all"
   }'
 ```
 
@@ -174,7 +184,7 @@ print("Sources:", [s.doc_id for s in result.sources])
 ```bash
 # Clone the repository
 git clone https://github.com/kalpit118/DocsRAG.git
-cd docsRAG
+cd DocsRAG
 
 # Create virtual environment
 python -m venv .venv
@@ -219,17 +229,16 @@ EMBED_MODEL=all-MiniLM-L6-v2
 CHROMA_DB_PATH=db/chroma
 SQLITE_DB_PATH=db/eval.db
 DOCS_PATH=data/docs
+USER_UPLOADS_PATH=data/user_uploads
 ```
 
-### 4. Ingest Documentation
+### 4. Ingest Base Documentation
 
 Ingest documentation markdown files into ChromaDB (generates both `recursive` and `header_aware` collections):
 
 ```bash
 python scripts/ingest.py
 ```
-
-*(If you wish to ingest custom documentation, simply drop markdown `.md`/`.mdx` files into `data/docs/` before running).*
 
 ### 5. Launch the Application
 
@@ -251,47 +260,24 @@ uvicorn src.api.main:app --reload --host 127.0.0.1 --port 8000
 
 ## 📡 API Specification
 
-### `POST /ask`
-Executes vector retrieval, optional cross-encoder reranking, answer generation, and judge verification.
-
-**Request Body (`application/json`):**
-```json
-{
-  "question": "How do I install LangChain?",
-  "chunking": "recursive",
-  "use_reranker": true,
-  "top_k": 5
-}
-```
-
-**Response (`200 OK` - `RAGAnswer`):**
-```json
-{
-  "answer": "To install LangChain, you can use either pip or conda: ... [docs/get_started/installation.mdx#0].",
-  "sources": [
-    {
-      "doc_id": "docs/get_started/installation.mdx",
-      "chunk_index": 0,
-      "text": "To install LangChain run: pip install langchain ...",
-      "score": 0.9234
-    }
-  ],
-  "grounded": true,
-  "latency_ms": 479.25
-}
-```
-
-### `GET /eval/latest?n=10`
-Retrieves the most recent query audit logs and evaluation results from SQLite.
-
-### `GET /health`
-Returns system operational status (`{"status": "ok"}`).
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/ask` | Synchronous RAG query with retrieval, reranking, answering, and LLM verification. |
+| `POST` | `/ask/stream` | Server-Sent Events (SSE) streaming endpoint returning real-time tokens and grounding audit. |
+| `POST` | `/documents/upload` | Multipart file upload (`.pdf`, `.md`, `.txt`) indexed dynamically into ChromaDB. |
+| `GET` | `/documents` | List uploaded user documents, file sizes, and indexed chunk counts. |
+| `DELETE` | `/documents/{filename}` | Delete a user document and purge its embeddings from Chroma collections. |
+| `GET` | `/documents/raw` | Secure raw document content retriever for the in-app context viewer. |
+| `GET` | `/sessions/{id}/messages` | Retrieve conversation turn history for a session from SQLite. |
+| `DELETE` | `/sessions/{id}` | Clear message history for a specific conversation session. |
+| `GET` | `/eval/latest` | Retrieve recent retrieval accuracy and faithfulness runs from SQLite. |
+| `GET` | `/health` | System operational health probe (`{"status": "ok"}`). |
 
 ---
 
 ## 🧪 Testing
 
-DocsRAG includes a test suite covering chunker boundary logic, mocked vector search, reranking behavior, and FastAPI endpoint contracts.
+DocsRAG includes a comprehensive automated test suite covering chunker boundary logic, vector search, reranking behavior, document upload/deletion, conversational memory query reformulation, raw text retrieval, and FastAPI endpoint contracts.
 
 ```bash
 pytest tests/ -v
@@ -300,10 +286,13 @@ pytest tests/ -v
 ```text
 tests/test_chunker.py::test_recursive_chunker PASSED
 tests/test_chunker.py::test_header_aware_chunker PASSED
-tests/test_retrieval.py::test_dense_retrieval PASSED
-tests/test_retrieval.py::test_reranker PASSED
 tests/test_api.py::test_health PASSED
 tests/test_api.py::test_ask_endpoint PASSED
+tests/test_new_features.py::test_upload_and_manage_documents PASSED
+tests/test_new_features.py::test_raw_document_viewer_security PASSED
+tests/test_new_features.py::test_chat_message_persistence PASSED
+tests/test_new_features.py::test_query_reformulation PASSED
+============================== 14 passed in 30.22s ===============================
 ```
 
 ---
@@ -315,42 +304,45 @@ DocsRAG/
 ├── assets/
 │   └── webui.png              # UI screenshot and visual demonstration
 ├── data/
-│   └── docs/                  # Corpus of markdown documentation (*.md, *.mdx)
+│   ├── docs/                  # Corpus of technical markdown docs (*.md, *.mdx)
+│   └── user_uploads/          # Storage directory for user-uploaded custom files
 ├── db/
 │   ├── chroma/                # Persistent vector database collections
-│   └── eval.db                # SQLite audit logger for queries and eval runs
+│   └── eval.db                # SQLite store for query evaluations & chat messages
 ├── scripts/
 │   ├── ingest.py              # Ingestion pipeline: load, split, embed, index
 │   ├── evaluate.py            # Quick retrieval metrics runner
-│   └── compare_configs.py     # Configuration comparison script with markdown & DB output
+│   └── compare_configs.py     # Configuration comparison benchmark script
 ├── src/
 │   ├── __init__.py
 │   ├── llm.py                 # Multi-provider client (Groq, OpenAI, SentenceTransformers)
 │   ├── agent/
-│   │   └── loop.py            # Multi-turn tool-calling agent (retrieve_docs)
+│   │   ├── loop.py            # Multi-hop tool-calling agent (retrieve_docs)
+│   │   └── memory.py          # Conversational memory & query reformulation engine
 │   ├── api/
-│   │   ├── main.py            # FastAPI application routes
+│   │   ├── main.py            # FastAPI REST & SSE endpoints
 │   │   ├── schemas.py         # Pydantic v2 schemas (QueryRequest, RAGAnswer, etc.)
-│   │   └── index.html         # Dark-canvas responsive web application
+│   │   └── index.html         # Framer-style dark-canvas responsive web application
 │   ├── eval/
 │   │   ├── harness.py         # Hit@K and MRR computation engine
 │   │   ├── judge.py           # LLM-as-a-Judge faithfulness scoring
-│   │   └── logger.py          # SQLite database connection & query audit
+│   │   └── logger.py          # SQLite database connection, query audit & chat history
 │   ├── generation/
-│   │   ├── generator.py       # Context assembly & LLM generation
+│   │   ├── generator.py       # Context assembly, streaming & LLM generation
 │   │   └── prompts.py         # Grounding & Judge prompt templates
 │   ├── ingest/
-│   │   ├── loader.py          # File discovery and markdown extractor
+│   │   ├── loader.py          # Documentation file discovery & markdown loader
 │   │   ├── chunker.py         # Recursive & Header-aware chunking implementations
-│   │   └── embedder.py        # Vector embedding generator & Chroma loader
+│   │   ├── embedder.py        # Vector embedding generator & Chroma loader
+│   │   └── user_docs.py       # Custom document parser (PDF/MD/TXT) & dynamic ingestion
 │   └── retrieval/
-│       ├── retriever.py       # ChromaDB vector retrieval
+│       ├── retriever.py       # ChromaDB multi-collection vector retrieval
 │       └── reranker.py        # Sentence-Transformers Cross-Encoder
 ├── tests/                     # Automated unit and integration tests
 ├── ask.py                     # CLI assistant for terminal users
 ├── eval_qa.json               # 20 hand-crafted test questions with ground truth
 ├── pyproject.toml             # Project metadata & tool configuration
-├── requirements.txt           # Production dependencies
+├── requirements.txt           # Production dependencies (including pypdf, python-multipart)
 └── run.ps1                    # PowerShell launcher script
 ```
 
@@ -360,9 +352,11 @@ DocsRAG/
 
 - **Framework:** [FastAPI](https://fastapi.tiangolo.com/), [Uvicorn](https://www.uvicorn.org/)
 - **Vector Database:** [ChromaDB](https://www.trychroma.com/)
+- **Document Processing:** [pypdf](https://pypi.org/project/pypdf/), [python-multipart](https://andrew-d.github.io/python-multipart/)
 - **Embedding Models:** `all-MiniLM-L6-v2` / `text-embedding-3-small`
 - **Reranker Model:** `cross-encoder/ms-marco-MiniLM-L-6-v2` via [Sentence-Transformers](https://sbert.net/)
 - **Inference Providers:** [Groq](https://groq.com/) (Llama 3.3 70B, Qwen) & [OpenAI](https://openai.com/) (GPT-4o-mini)
+- **Streaming:** Server-Sent Events (SSE)
 - **Data Validation:** [Pydantic v2](https://docs.pydantic.dev/)
 - **Persistence:** [SQLite](https://www.sqlite.org/)
 - **Testing:** [Pytest](https://docs.pytest.org/), [HTTPX](https://www.python-httpx.org/)

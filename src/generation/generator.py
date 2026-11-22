@@ -14,9 +14,11 @@ import time
 
 from openai import OpenAI
 
+from typing import Generator
+
 from src.api.schemas import RAGAnswer, Source
 from src.eval.judge import score_faithfulness
-from src.eval.logger import log_query
+from src.eval.logger import log_query, save_chat_message
 from src.generation.prompts import SYSTEM_PROMPT
 from src.llm import get_chat_client, get_default_chat_model
 
@@ -38,24 +40,42 @@ def _build_context(sources: list[Source]) -> str:
     return "\n\n---\n\n".join(parts)
 
 
+def _build_messages(
+    question: str,
+    sources: list[Source],
+    history: list[dict] | None = None,
+) -> list[dict[str, str]]:
+    context = _build_context(sources)
+    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+    if history:
+        for h in history[-6:]:
+            role = "user" if h.get("role") == "user" else "assistant"
+            content = h.get("content", "")
+            if content:
+                messages.append({"role": role, "content": content})
+    messages.append({
+        "role": "user",
+        "content": f"Context:\n{context}\n\nQuestion: {question}",
+    })
+    return messages
+
+
 def generate(
     question: str,
     sources: list[Source],
     chunking: str = "recursive",
     use_reranker: bool = True,
     model: str | None = None,
+    history: list[dict] | None = None,
+    session_id: str | None = None,
 ) -> RAGAnswer:
     chat_model = model or get_default_chat_model()
-    context = _build_context(sources)
-    user_msg = f"Context:\n{context}\n\nQuestion: {question}"
+    messages = _build_messages(question, sources, history)
 
     t0 = time.perf_counter()
     resp = _get_client().chat.completions.create(
         model=chat_model,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": user_msg},
-        ],
+        messages=messages,
         temperature=0,
     )
     latency_ms = (time.perf_counter() - t0) * 1000
@@ -72,9 +92,43 @@ def generate(
         latency_ms=latency_ms,
     )
 
+    if session_id:
+        save_chat_message(session_id=session_id, role="user", content=question)
+        save_chat_message(
+            session_id=session_id,
+            role="assistant",
+            content=answer_text,
+            sources=[s.model_dump() for s in sources],
+            grounded=grounded,
+            latency_ms=latency_ms,
+        )
+
     return RAGAnswer(
         answer=answer_text,
         sources=sources,
         grounded=grounded,
         latency_ms=round(latency_ms, 1),
+        session_id=session_id,
     )
+
+
+def generate_stream(
+    question: str,
+    sources: list[Source],
+    model: str | None = None,
+    history: list[dict] | None = None,
+) -> Generator[str, None, None]:
+    """Yield incremental text tokens for Server-Sent Events (SSE) streaming."""
+    chat_model = model or get_default_chat_model()
+    messages = _build_messages(question, sources, history)
+
+    stream = _get_client().chat.completions.create(
+        model=chat_model,
+        messages=messages,
+        temperature=0,
+        stream=True,
+    )
+    for chunk in stream:
+        if chunk.choices and chunk.choices[0].delta and chunk.choices[0].delta.content:
+            yield chunk.choices[0].delta.content
+

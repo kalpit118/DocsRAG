@@ -8,11 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* =====================================================================
-       Minimalist Dark Canvas Engineering Theme (Clean, Restrained, Non-Slop)
-       ===================================================================== */
     :root {
-      /* Surface & Canvas Hierarchy */
       --canvas: #090909;
       --surface-1: #121212;
       --surface-2: #181818;
@@ -21,21 +17,16 @@
       --hairline-soft: #171717;
       --hairline-strong: #303030;
 
-      /* Ink / Typography */
       --primary: #ffffff;
       --on-primary: #000000;
       --ink: #ededed;
       --ink-muted: #888888;
       --ink-faint: #555555;
 
-      /* Single Functional Accent */
       --accent-blue: #0099ff;
-
-      /* Semantics (Understated) */
       --semantic-success: #22c55e;
       --semantic-danger: #ef4444;
 
-      /* Radius Scale */
       --radius-xs: 4px;
       --radius-sm: 6px;
       --radius-md: 10px;
@@ -44,19 +35,11 @@
       --radius-pill: 100px;
       --radius-full: 9999px;
 
-      /* Elevation / Shadows */
-      --shadow-subtle: 0px 4px 16px rgba(0, 0, 0, 0.4);
       --shadow-card: inset 0px 1px 0px rgba(255, 255, 255, 0.05), 0px 16px 36px -12px rgba(0, 0, 0, 0.6);
       --shadow-focus: 0 0 0 1px var(--accent-blue), 0 0 0 3px rgba(0, 153, 255, 0.12);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -72,23 +55,11 @@
       line-height: 1.45;
     }
 
-    /* Scrollbars */
-    ::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: var(--hairline);
-      border-radius: var(--radius-pill);
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #444444;
-    }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: var(--radius-pill); }
+    ::-webkit-scrollbar-thumb:hover { background: #444; }
 
-    /* SVG Icon Helpers */
     .icon {
       display: inline-block;
       vertical-align: middle;
@@ -99,9 +70,7 @@
       stroke: currentColor;
     }
 
-    /* =====================================================================
-       Top Nav Bar
-       ===================================================================== */
+    /* Top Nav */
     header.top-nav {
       height: 52px;
       background: var(--canvas);
@@ -146,9 +115,7 @@
 
     .brand-meta {
       font-size: 12.5px;
-      font-weight: 400;
       color: var(--ink-muted);
-      letter-spacing: -0.1px;
       border-left: 1px solid var(--hairline);
       padding-left: 10px;
       margin-left: 2px;
@@ -157,7 +124,8 @@
     .nav-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      position: relative;
     }
 
     .status-indicator {
@@ -171,6 +139,7 @@
       background: var(--surface-1);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-pill);
+      margin-right: 4px;
     }
 
     .status-dot {
@@ -187,17 +156,17 @@
       justify-content: center;
       gap: 6px;
       font-family: 'Inter', sans-serif;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 500;
       line-height: 1.0;
-      letter-spacing: -0.14px;
+      letter-spacing: -0.12px;
       border-radius: var(--radius-pill);
-      padding: 8px 14px;
+      padding: 7px 13px;
       cursor: pointer;
       text-decoration: none;
       transition: all 0.15s ease;
       white-space: nowrap;
-      min-height: 34px;
+      min-height: 32px;
     }
 
     .btn-primary {
@@ -205,57 +174,65 @@
       color: var(--on-primary);
       border: 1px solid var(--primary);
     }
-
-    .btn-primary:hover {
-      background: #e2e2e2;
-      border-color: #e2e2e2;
-    }
-
-    .btn-primary:active {
-      transform: scale(0.98);
-    }
-
-    .btn-primary:disabled {
-      background: #282828;
-      border-color: #282828;
-      color: #666666;
-      cursor: not-allowed;
-      transform: none;
-    }
+    .btn-primary:hover { background: #e2e2e2; border-color: #e2e2e2; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { background: #282828; border-color: #282828; color: #666; cursor: not-allowed; }
 
     .btn-secondary {
       background: var(--surface-1);
       color: var(--ink);
       border: 1px solid var(--hairline);
     }
-
-    .btn-secondary:hover {
-      background: var(--surface-2);
-      border-color: var(--hairline-strong);
-    }
+    .btn-secondary:hover { background: var(--surface-2); border-color: var(--hairline-strong); }
 
     .btn-translucent {
       background: var(--surface-1);
       color: var(--ink-muted);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-pill);
-      padding: 7px 12px;
-      font-size: 12.5px;
+      padding: 6px 12px;
+      font-size: 12px;
       font-weight: 400;
-      letter-spacing: -0.1px;
       cursor: pointer;
       transition: all 0.15s ease;
     }
+    .btn-translucent:hover { background: var(--surface-2); border-color: var(--hairline-strong); color: var(--ink); }
 
-    .btn-translucent:hover {
-      background: var(--surface-2);
-      border-color: var(--hairline-strong);
-      color: var(--ink);
+    /* Export Dropdown Menu */
+    .dropdown-wrapper {
+      position: relative;
     }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      background: var(--surface-1);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6);
+      display: none;
+      flex-direction: column;
+      min-width: 170px;
+      padding: 4px;
+      z-index: 50;
+    }
+    .dropdown-menu.show { display: flex; }
+    .dropdown-item {
+      padding: 8px 12px;
+      font-size: 12px;
+      color: var(--ink);
+      border: none;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      border-radius: var(--radius-xs);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dropdown-item:hover { background: var(--surface-2); }
 
-    /* =====================================================================
-       Layout Container
-       ===================================================================== */
+    /* Layout */
     .layout-container {
       display: flex;
       flex: 1;
@@ -263,55 +240,37 @@
       position: relative;
     }
 
-    /* =====================================================================
-       Sidebar: Controls & Telemetry
-       ===================================================================== */
+    /* Sidebar */
     aside.sidebar {
-      width: 300px;
+      width: 320px;
       background: var(--canvas);
       border-right: 1px solid var(--hairline-soft);
-      padding: 20px 18px;
+      padding: 18px 16px;
       display: flex;
       flex-direction: column;
-      gap: 22px;
+      gap: 20px;
       flex-shrink: 0;
       overflow-y: auto;
       z-index: 5;
     }
 
     .sidebar-section-title {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--ink-faint);
       margin-bottom: 8px;
-    }
-
-    .control-block {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .control-label {
-      font-size: 12.5px;
-      font-weight: 500;
-      color: var(--ink);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      letter-spacing: -0.1px;
     }
 
-    .control-desc {
-      font-size: 11.5px;
-      color: var(--ink-muted);
-      line-height: 1.35;
-      letter-spacing: -0.1px;
-    }
+    .control-block { display: flex; flex-direction: column; gap: 7px; }
+    .control-label { font-size: 12px; font-weight: 500; color: var(--ink); display: flex; justify-content: space-between; align-items: center; }
+    .control-desc { font-size: 11px; color: var(--ink-muted); line-height: 1.35; }
 
-    /* Segmented Pill Control */
+    /* Segmented Tab Control */
     .segmented-control {
       display: flex;
       background: var(--surface-1);
@@ -320,36 +279,91 @@
       padding: 2px;
       gap: 2px;
     }
-
     .segmented-tab {
       flex: 1;
       background: transparent;
       color: var(--ink-muted);
       font-family: 'Inter', sans-serif;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 500;
       line-height: 1.0;
-      letter-spacing: -0.1px;
       border: none;
       border-radius: var(--radius-pill);
-      padding: 7px 10px;
+      padding: 7px 8px;
       cursor: pointer;
       text-align: center;
       transition: all 0.15s ease;
       white-space: nowrap;
     }
+    .segmented-tab.selected { background: var(--surface-3); color: var(--ink); }
+    .segmented-tab:hover:not(.selected) { color: var(--ink); }
 
-    .segmented-tab.selected {
-      background: var(--surface-3);
-      color: var(--ink);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    /* Upload Dropzone */
+    .upload-dropzone {
+      background: var(--surface-1);
+      border: 1px dashed var(--hairline-strong);
+      border-radius: var(--radius-md);
+      padding: 14px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
     }
-
-    .segmented-tab:hover:not(.selected) {
-      color: var(--ink);
+    .upload-dropzone:hover, .upload-dropzone.dragover {
+      border-color: var(--accent-blue);
+      background: rgba(0, 153, 255, 0.04);
     }
+    .upload-icon { stroke: var(--ink-muted); }
+    .upload-text { font-size: 12px; font-weight: 500; color: var(--ink); }
+    .upload-subtext { font-size: 10.5px; color: var(--ink-muted); }
 
-    /* Clean Toggle Switch */
+    /* Uploaded Documents List */
+    .doc-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+    .doc-item {
+      background: var(--surface-1);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11.5px;
+    }
+    .doc-item-title {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--ink);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+    .doc-item-meta {
+      font-size: 10px;
+      color: var(--ink-muted);
+      white-space: nowrap;
+    }
+    .doc-delete-btn {
+      background: transparent;
+      border: none;
+      color: var(--ink-faint);
+      cursor: pointer;
+      padding: 2px;
+      display: flex;
+      align-items: center;
+    }
+    .doc-delete-btn:hover { color: var(--semantic-danger); }
+
+    /* Toggle Switch */
     .toggle-row {
       display: flex;
       align-items: center;
@@ -357,76 +371,54 @@
       background: var(--surface-1);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-md);
-      padding: 10px 12px;
+      padding: 9px 12px;
       cursor: pointer;
       transition: border-color 0.15s ease;
     }
-
-    .toggle-row:hover {
-      border-color: var(--hairline-strong);
+    .toggle-row:hover { border-color: var(--hairline-strong); }
+    .switch { position: relative; display: inline-block; width: 36px; height: 18px; flex-shrink: 0; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch-slider {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #242424; border: 1px solid var(--hairline); border-radius: var(--radius-pill); transition: .18s ease;
     }
+    .switch-slider:before {
+      position: absolute; content: ""; height: 12px; width: 12px; left: 2px; bottom: 2px;
+      background-color: #ededed; border-radius: 50%; transition: .18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    input:checked + .switch-slider { background-color: var(--accent-blue); border-color: var(--accent-blue); }
+    input:checked + .switch-slider:before { transform: translateX(18px); background-color: #ffffff; }
 
-    .toggle-info {
+    /* Slider */
+    .slider-container {
+      background: var(--surface-1);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 6px;
     }
-
-    .toggle-label {
-      font-size: 12.5px;
-      font-weight: 500;
-      color: var(--ink);
-      letter-spacing: -0.1px;
-    }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 38px;
-      height: 20px;
-      flex-shrink: 0;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .switch-slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #242424;
+    .slider-val-badge {
+      background: var(--surface-2);
       border: 1px solid var(--hairline);
+      color: var(--ink);
+      padding: 1px 6px;
       border-radius: var(--radius-pill);
-      transition: .18s ease;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+    }
+    input[type="range"] {
+      -webkit-appearance: none; width: 100%; height: 3px; background: var(--hairline);
+      border-radius: var(--radius-pill); outline: none; margin: 4px 0;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 14px; height: 14px; border-radius: var(--radius-full);
+      background: var(--primary); cursor: pointer; border: 2px solid var(--canvas);
     }
 
-    .switch-slider:before {
-      position: absolute;
-      content: "";
-      height: 14px;
-      width: 14px;
-      left: 2px;
-      bottom: 2px;
-      background-color: #ededed;
-      border-radius: 50%;
-      transition: .18s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    input:checked + .switch-slider {
-      background-color: var(--accent-blue);
-      border-color: var(--accent-blue);
-    }
-
-    input:checked + .switch-slider:before {
-      transform: translateX(18px);
-      background-color: #ffffff;
-    }
-
-    /* Range Slider */
-    .slider-container {
+    /* Telemetry Card */
+    .info-card {
       background: var(--surface-1);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-md);
@@ -435,83 +427,11 @@
       flex-direction: column;
       gap: 8px;
     }
+    .info-item { display: flex; justify-content: space-between; align-items: center; font-size: 11px; line-height: 1.2; }
+    .info-name { color: var(--ink-muted); }
+    .info-val { font-family: 'JetBrains Mono', monospace; color: var(--ink); font-size: 10.5px; }
 
-    .slider-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .slider-val-badge {
-      background: var(--surface-2);
-      border: 1px solid var(--hairline);
-      color: var(--ink);
-      padding: 2px 7px;
-      border-radius: var(--radius-pill);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-    }
-
-    input[type="range"] {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 3px;
-      background: var(--hairline);
-      border-radius: var(--radius-pill);
-      outline: none;
-      margin: 4px 0;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 15px;
-      height: 15px;
-      border-radius: var(--radius-full);
-      background: var(--primary);
-      cursor: pointer;
-      border: 2px solid var(--canvas);
-      transition: transform 0.1s;
-    }
-
-    input[type="range"]::-webkit-slider-thumb:hover {
-      transform: scale(1.12);
-    }
-
-    /* Telemetry Card */
-    .info-card {
-      background: var(--surface-1);
-      border: 1px solid var(--hairline);
-      border-radius: var(--radius-md);
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .info-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 11.5px;
-      line-height: 1.2;
-    }
-
-    .info-name {
-      color: var(--ink-muted);
-      letter-spacing: -0.1px;
-    }
-
-    .info-val {
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--ink);
-      font-weight: 500;
-      font-size: 10.5px;
-    }
-
-    /* =====================================================================
-       Main Chat Canvas
-       ===================================================================== */
+    /* Main Chat Canvas */
     main.chat-canvas {
       flex: 1;
       display: flex;
@@ -524,137 +444,81 @@
     .chat-scroll {
       flex: 1;
       overflow-y: auto;
-      padding: 28px 24px 130px 24px;
+      padding: 24px 24px 130px 24px;
       display: flex;
       flex-direction: column;
-      gap: 22px;
+      gap: 20px;
       max-width: 860px;
       width: 100%;
       margin: 0 auto;
     }
 
-    /* Clean Monochromatic Overview Card (Replaces AI slop gradient) */
-    .overview-card,
-    .spotlight-card {
+    /* Overview Welcome Card */
+    .overview-card {
       background: var(--surface-1);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-xl);
-      padding: 28px;
-      position: relative;
+      padding: 26px;
       box-shadow: var(--shadow-card);
       animation: fadeIn 0.25s ease-out;
     }
-
     .spotlight-eyebrow {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--ink-muted);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       gap: 6px;
     }
-
     .spotlight-eyebrow::before {
       content: "";
       width: 5px;
       height: 5px;
       border-radius: var(--radius-full);
       background: var(--ink-faint);
-      display: inline-block;
     }
-
     .spotlight-headline {
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 600;
       line-height: 1.2;
       letter-spacing: -0.8px;
       color: var(--ink);
       margin-bottom: 8px;
     }
-
     .spotlight-subhead {
-      font-size: 14px;
-      font-weight: 400;
+      font-size: 13.5px;
       line-height: 1.5;
-      letter-spacing: -0.12px;
       color: var(--ink-muted);
       max-width: 640px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
-
-    .spotlight-feature-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
+    .spotlight-feature-row { display: flex; flex-wrap: wrap; gap: 8px; }
     .feature-chip {
       background: var(--surface-2);
       border: 1px solid var(--hairline);
       color: var(--ink-muted);
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 500;
-      letter-spacing: -0.1px;
-      padding: 5px 11px;
+      padding: 5px 10px;
       border-radius: var(--radius-pill);
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.15s ease;
     }
 
-    .feature-chip:hover {
-      border-color: var(--hairline-strong);
-      color: var(--ink);
-    }
+    /* Suggested Queries */
+    .suggestions-section { display: flex; flex-direction: column; gap: 8px; }
+    .suggestions-label { font-size: 11px; font-weight: 600; color: var(--ink-faint); letter-spacing: 0.06em; text-transform: uppercase; }
+    .suggestions-grid { display: flex; flex-wrap: wrap; gap: 6px; }
 
-    .feature-chip .chip-icon {
-      stroke: var(--ink-muted);
-    }
+    /* Message Bubbles */
+    .msg-group { display: flex; flex-direction: column; gap: 6px; animation: fadeIn 0.2s ease-out; width: 100%; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    .feature-chip:hover .chip-icon {
-      stroke: var(--ink);
-    }
-
-    /* Suggestions Section */
-    .suggestions-section {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .suggestions-label {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--ink-faint);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .suggestions-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    /* Message Groups */
-    .msg-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      animation: fadeIn 0.2s ease-out;
-      width: 100%;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* User Message */
+    /* User Message: Crisp White Accent */
     .msg-user-container {
       align-self: flex-end;
       max-width: 78%;
@@ -683,78 +547,52 @@
       flex-direction: column;
       gap: 14px;
     }
-
     .msg-header {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
-      letter-spacing: -0.1px;
       color: var(--ink-muted);
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
-
-    .msg-content {
-      font-size: 14.5px;
-      line-height: 1.6;
-      color: #dfdfdf;
-    }
-
-    .msg-content p {
-      margin-bottom: 12px;
-    }
-
-    .msg-content p:last-child {
-      margin-bottom: 0;
-    }
-
-    .msg-content strong {
-      color: var(--ink);
-      font-weight: 600;
-    }
-
+    .msg-content { font-size: 14.5px; line-height: 1.6; color: #dfdfdf; }
+    .msg-content p { margin-bottom: 12px; }
+    .msg-content p:last-child { margin-bottom: 0; }
+    .msg-content strong { color: var(--ink); font-weight: 600; }
     .msg-content code {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      background: #0d0d0d;
-      border: 1px solid var(--hairline);
-      padding: 2px 5px;
-      border-radius: var(--radius-xs);
-      color: #cbd5e1;
+      font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      background: #0d0d0d; border: 1px solid var(--hairline); padding: 2px 5px;
+      border-radius: var(--radius-xs); color: #cbd5e1;
     }
-
     .msg-content pre {
-      background: #080808;
-      border: 1px solid var(--hairline);
-      border-radius: var(--radius-sm);
-      padding: 12px 16px;
-      margin: 12px 0;
-      overflow-x: auto;
+      background: #080808; border: 1px solid var(--hairline); border-radius: var(--radius-sm);
+      padding: 12px 16px; margin: 12px 0; overflow-x: auto;
     }
+    .msg-content pre code { background: transparent; border: none; padding: 0; font-size: 12px; }
 
-    .msg-content pre code {
-      background: transparent;
-      border: none;
-      padding: 0;
-      font-size: 12.5px;
-      line-height: 1.5;
-      color: #f1f5f9;
-    }
-
-    /* Citation Tag */
+    /* Interactive Citation Tag (Opens Full-Doc Viewer) */
     .citation-tag {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
       color: var(--accent-blue);
       background: rgba(0, 153, 255, 0.06);
       border: 1px solid rgba(0, 153, 255, 0.2);
-      padding: 1px 5px;
+      padding: 1px 6px;
       border-radius: var(--radius-xs);
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
       margin: 0 2px;
       font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .citation-tag:hover {
+      background: rgba(0, 153, 255, 0.14);
+      border-color: var(--accent-blue);
     }
 
     /* Meta Bar */
@@ -768,7 +606,6 @@
       font-size: 11.5px;
       color: var(--ink-muted);
     }
-
     .meta-pill {
       display: inline-flex;
       align-items: center;
@@ -777,28 +614,10 @@
       border-radius: var(--radius-pill);
       font-size: 11.5px;
       font-weight: 500;
-      letter-spacing: -0.1px;
     }
-
-    .pill-grounded-true {
-      background: rgba(34, 197, 94, 0.08);
-      border: 1px solid rgba(34, 197, 94, 0.2);
-      color: var(--semantic-success);
-    }
-
-    .pill-grounded-false {
-      background: rgba(239, 68, 68, 0.08);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      color: var(--semantic-danger);
-    }
-
-    .pill-latency {
-      background: var(--surface-2);
-      border: 1px solid var(--hairline);
-      color: var(--ink-muted);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-    }
+    .pill-grounded-true { background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.2); color: var(--semantic-success); }
+    .pill-grounded-false { background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.2); color: var(--semantic-danger); }
+    .pill-latency { background: var(--surface-2); border: 1px solid var(--hairline); color: var(--ink-muted); font-family: 'JetBrains Mono', monospace; font-size: 10.5px; }
 
     .sources-toggle-btn {
       background: transparent;
@@ -807,7 +626,6 @@
       font-family: 'Inter', sans-serif;
       font-size: 11.5px;
       font-weight: 500;
-      letter-spacing: -0.1px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -817,31 +635,11 @@
       border-radius: var(--radius-pill);
       transition: all 0.15s ease;
     }
+    .sources-toggle-btn:hover { background: var(--surface-2); border-color: var(--hairline-strong); color: var(--ink); }
+    .sources-toggle-btn.open .chevron-icon { transform: rotate(180deg); }
 
-    .sources-toggle-btn:hover {
-      background: var(--surface-2);
-      border-color: var(--hairline-strong);
-      color: var(--ink);
-    }
-
-    .sources-toggle-btn .chevron-icon {
-      transition: transform 0.18s ease;
-    }
-
-    .sources-toggle-btn.open .chevron-icon {
-      transform: rotate(180deg);
-    }
-
-    /* Sources Drawer */
-    .sources-tray {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 4px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--hairline);
-    }
-
+    /* Sources List & Card */
+    .sources-tray { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; padding-top: 10px; border-top: 1px dashed var(--hairline); }
     .source-card {
       background: var(--canvas);
       border: 1px solid var(--hairline);
@@ -852,73 +650,26 @@
       gap: 5px;
       transition: border-color 0.15s ease;
     }
-
-    .source-card:hover {
-      border-color: var(--hairline-strong);
-    }
-
-    .source-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-    }
-
-    .source-doc-id {
-      color: #93c5fd;
-      font-weight: 500;
-      word-break: break-all;
-    }
-
-    .source-score {
-      color: var(--ink-muted);
-      background: var(--surface-1);
-      border: 1px solid var(--hairline);
-      padding: 1px 6px;
-      border-radius: var(--radius-pill);
-      font-size: 10px;
-    }
-
+    .source-card:hover { border-color: var(--hairline-strong); }
+    .source-card-header { display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+    .source-doc-id { color: #93c5fd; font-weight: 500; cursor: pointer; text-decoration: underline; text-decoration-color: transparent; }
+    .source-doc-id:hover { text-decoration-color: #93c5fd; }
+    .source-score { color: var(--ink-muted); background: var(--surface-1); border: 1px solid var(--hairline); padding: 1px 6px; border-radius: var(--radius-pill); font-size: 10px; }
     .source-snippet {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      line-height: 1.45;
-      color: #94a3b8;
-      white-space: pre-wrap;
-      max-height: 130px;
-      overflow-y: auto;
-      background: #050505;
-      border: 1px solid #141414;
-      padding: 8px 10px;
-      border-radius: var(--radius-xs);
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 1.45;
+      color: #94a3b8; white-space: pre-wrap; max-height: 130px; overflow-y: auto;
+      background: #050505; border: 1px solid #141414; padding: 8px 10px; border-radius: var(--radius-xs);
     }
-
-    /* Loading Shimmer Card */
-    .loading-pulse {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--ink-muted);
-      font-size: 13px;
+    .source-inspect-action {
+      font-size: 10.5px;
+      color: var(--accent-blue);
+      cursor: pointer;
+      align-self: flex-start;
+      margin-top: 2px;
     }
+    .source-inspect-action:hover { text-decoration: underline; }
 
-    .loading-spinner {
-      width: 15px;
-      height: 15px;
-      border: 2px solid var(--hairline);
-      border-top-color: var(--ink);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* =====================================================================
-       Floating Input Dock
-       ===================================================================== */
+    /* Floating Input Dock */
     .input-dock {
       position: absolute;
       bottom: 20px;
@@ -928,11 +679,9 @@
       max-width: 820px;
       z-index: 20;
     }
-
     .input-pill-wrapper {
       background: rgba(18, 18, 18, 0.92);
       backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-pill);
       padding: 5px 6px 5px 18px;
@@ -942,151 +691,85 @@
       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
       transition: all 0.15s ease;
     }
+    .input-pill-wrapper:focus-within { border-color: var(--hairline-strong); box-shadow: var(--shadow-focus), 0 12px 32px rgba(0, 0, 0, 0.6); }
+    .query-input { flex: 1; background: transparent; border: none; outline: none; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 14px; }
+    .query-input::placeholder { color: var(--ink-faint); }
+    .kbd-hint { font-size: 10.5px; font-weight: 500; color: var(--ink-faint); background: var(--surface-2); border: 1px solid var(--hairline); padding: 2px 5px; border-radius: var(--radius-xs); pointer-events: none; }
 
-    .input-pill-wrapper:focus-within {
-      border-color: var(--hairline-strong);
-      box-shadow: var(--shadow-focus), 0 12px 32px rgba(0, 0, 0, 0.6);
-    }
-
-    .query-input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      letter-spacing: -0.15px;
-    }
-
-    .query-input::placeholder {
-      color: var(--ink-faint);
-    }
-
-    .kbd-hint {
-      font-size: 10.5px;
-      font-family: 'Inter', sans-serif;
-      font-weight: 500;
-      color: var(--ink-faint);
-      background: var(--surface-2);
-      border: 1px solid var(--hairline);
-      padding: 2px 5px;
-      border-radius: var(--radius-xs);
-      letter-spacing: 0.02em;
-      pointer-events: none;
-    }
-
-    /* =====================================================================
-       Benchmark Modal
-       ===================================================================== */
-    .modal-backdrop {
+    /* Slide-out Full Document Context Viewer (2D) */
+    .doc-viewer-drawer {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(8px);
-      z-index: 100;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      animation: fadeIn 0.2s ease-out;
-    }
-
-    .modal-card {
+      top: 0;
+      right: -620px;
+      width: 600px;
+      height: 100vh;
       background: var(--surface-1);
-      border: 1px solid var(--hairline);
-      border-radius: var(--radius-xl);
-      padding: 28px;
-      max-width: 780px;
-      width: 100%;
-      max-height: 85vh;
-      overflow-y: auto;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      border-left: 1px solid var(--hairline);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
+      z-index: 200;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      transition: right 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-title {
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: -0.5px;
-      color: var(--ink);
-    }
-
-    .btn-close {
-      width: 28px;
-      height: 28px;
-      background: var(--surface-2);
-      border: 1px solid var(--hairline);
-      border-radius: var(--radius-full);
-      color: var(--ink-muted);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s;
-    }
-
-    .btn-close:hover {
-      color: var(--ink);
-      border-color: var(--hairline-strong);
-    }
-
-    .benchmark-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12.5px;
-    }
-
-    .benchmark-table th {
-      text-align: left;
-      color: var(--ink-muted);
-      font-weight: 500;
-      padding: 8px 10px;
+    .doc-viewer-drawer.open { right: 0; }
+    .doc-viewer-header {
+      padding: 16px 20px;
       border-bottom: 1px solid var(--hairline);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .benchmark-table td {
-      padding: 10px;
-      border-bottom: 1px solid var(--hairline-soft);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11.5px;
-    }
-
-    .benchmark-table tr:hover td {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       background: var(--surface-2);
     }
+    .doc-viewer-title { font-size: 13.5px; font-weight: 600; color: var(--ink); font-family: 'JetBrains Mono', monospace; word-break: break-all; }
+    .doc-viewer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 20px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #cccccc;
+      white-space: pre-wrap;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .chunk-highlight {
+      background: rgba(0, 153, 255, 0.2);
+      border-left: 3px solid var(--accent-blue);
+      padding: 4px 6px;
+      display: block;
+      margin: 6px 0;
+      color: #ffffff;
+      border-radius: var(--radius-xs);
+    }
 
-    /* Responsive */
+    /* Modals */
+    .modal-backdrop {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px);
+      z-index: 100; display: none; align-items: center; justify-content: center; padding: 24px;
+    }
+    .modal-card {
+      background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--radius-xl);
+      padding: 28px; max-width: 780px; width: 100%; max-height: 85vh; overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8); display: flex; flex-direction: column; gap: 18px;
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; }
+    .modal-title { font-size: 18px; font-weight: 600; letter-spacing: -0.5px; color: var(--ink); }
+    .btn-close {
+      width: 28px; height: 28px; background: var(--surface-2); border: 1px solid var(--hairline);
+      border-radius: var(--radius-full); color: var(--ink-muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .benchmark-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .benchmark-table th { text-align: left; color: var(--ink-muted); font-weight: 500; padding: 8px 10px; border-bottom: 1px solid var(--hairline); font-size: 11px; text-transform: uppercase; }
+    .benchmark-table td { padding: 10px; border-bottom: 1px solid var(--hairline-soft); font-family: 'JetBrains Mono', monospace; font-size: 11.5px; }
+    .benchmark-table tr:hover td { background: var(--surface-2); }
+
     @media (max-width: 860px) {
-      aside.sidebar {
-        display: none;
-      }
-      .brand-meta {
-        display: none;
-      }
-      .chat-scroll {
-        padding: 18px 14px 120px 14px;
-      }
-      .input-dock {
-        width: calc(100% - 28px);
-      }
-      .overview-card, .spotlight-card {
-        padding: 20px;
-      }
-      .spotlight-headline {
-        font-size: 22px;
-      }
+      aside.sidebar { display: none; }
+      .brand-meta { display: none; }
+      .chat-scroll { padding: 18px 14px 120px 14px; }
+      .input-dock { width: calc(100% - 28px); }
+      .doc-viewer-drawer { width: 100%; right: -100%; }
     }
   </style>
 </head>
@@ -1096,9 +779,7 @@
   <header class="top-nav">
     <a href="/" class="brand">
       <div class="brand-mark">//</div>
-      <div>
-        <div class="brand-title">DocsRAG</div>
-      </div>
+      <div><div class="brand-title">DocsRAG</div></div>
       <div class="brand-meta">Documentation Assistant</div>
     </a>
 
@@ -1107,10 +788,35 @@
         <span class="status-dot"></span>
         <span>Operational</span>
       </div>
+
+      <button class="btn-pill btn-secondary" onclick="startNewSession()" title="Start a fresh chat turn">
+        <svg class="icon" width="11" height="11" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        <span>New Chat</span>
+      </button>
+
+      <!-- Export Dropdown Menu (2F) -->
+      <div class="dropdown-wrapper">
+        <button class="btn-pill btn-secondary" onclick="toggleExportMenu(event)">
+          <span>Export</span>
+          <svg class="icon" width="10" height="10" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dropdown-menu" id="exportMenu">
+          <button class="dropdown-item" onclick="exportSessionMarkdown()">
+            <svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>Markdown (.md)</span>
+          </button>
+          <button class="dropdown-item" onclick="exportSessionJSON()">
+            <svg class="icon" width="12" height="12" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            <span>Audit Log (.json)</span>
+          </button>
+        </div>
+      </div>
+
       <button class="btn-pill btn-secondary" onclick="openBenchmarkModal()">
         <span>Benchmark</span>
         <svg class="icon" width="10" height="10" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
       </button>
+
       <a href="/docs" target="_blank" class="btn-pill btn-primary">
         <span>API Docs</span>
         <svg class="icon" width="10" height="10" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
@@ -1119,31 +825,51 @@
   </header>
 
   <div class="layout-container">
-    <!-- Left Sidebar: Controls & System Spec -->
+    <!-- Left Sidebar: Corpus, Upload, Config & Telemetry -->
     <aside class="sidebar">
-      <div>
-        <div class="sidebar-section-title">Pipeline Architecture</div>
-        <div class="control-block">
-          <div class="control-label">
-            <span>Chunking Strategy</span>
-          </div>
-          <!-- Segmented Tab Control -->
-          <div class="segmented-control">
-            <button type="button" class="segmented-tab selected" id="tab-recursive" onclick="setChunking('recursive')">
-              Recursive
-            </button>
-            <button type="button" class="segmented-tab" id="tab-header" onclick="setChunking('header_aware')">
-              Header-Aware
-            </button>
-          </div>
-          <!-- Hidden input holding current value for backend POST /ask -->
-          <input type="hidden" id="chunking" value="recursive">
-          <div class="control-desc" id="chunking-desc">
-            Character and paragraph split (~1,000 chars) with 200 overlap.
-          </div>
+
+      <!-- Corpus Scope Switcher -->
+      <div class="control-block">
+        <div class="sidebar-section-title">Knowledge Base</div>
+        <div class="segmented-control">
+          <button type="button" class="segmented-tab selected" id="tab-corpus-all" onclick="setCorpus('all')">All</button>
+          <button type="button" class="segmented-tab" id="tab-corpus-langchain" onclick="setCorpus('langchain')">Docs</button>
+          <button type="button" class="segmented-tab" id="tab-corpus-user" onclick="setCorpus('user')">Uploads</button>
         </div>
+        <input type="hidden" id="corpus" value="all">
       </div>
 
+      <!-- User Document Upload Dropzone -->
+      <div class="control-block">
+        <div class="sidebar-section-title">
+          <span>Custom Documents</span>
+          <span id="doc-count-badge" style="color: var(--ink-faint);">0 files</span>
+        </div>
+
+        <div class="upload-dropzone" id="dropZone" onclick="document.getElementById('fileUploadInput').click()">
+          <svg class="icon upload-icon" width="18" height="18" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div class="upload-text">Upload PDF, MD, or TXT</div>
+          <div class="upload-subtext">Click or drag & drop (up to 25MB)</div>
+          <input type="file" id="fileUploadInput" multiple accept=".pdf,.md,.mdx,.txt" style="display:none;" onchange="handleFileSelect(event)">
+        </div>
+
+        <!-- Document List -->
+        <div class="doc-list" id="docListContainer"></div>
+      </div>
+
+      <!-- Pipeline Architecture -->
+      <div class="control-block">
+        <div class="sidebar-section-title">Pipeline Architecture</div>
+        <div class="control-label"><span>Chunking Strategy</span></div>
+        <div class="segmented-control">
+          <button type="button" class="segmented-tab selected" id="tab-recursive" onclick="setChunking('recursive')">Recursive</button>
+          <button type="button" class="segmented-tab" id="tab-header" onclick="setChunking('header_aware')">Header-Aware</button>
+        </div>
+        <input type="hidden" id="chunking" value="recursive">
+        <div class="control-desc" id="chunking-desc">Character and paragraph split (~1,000 chars) with 200 overlap.</div>
+      </div>
+
+      <!-- Ranking Model -->
       <div class="control-block">
         <div class="sidebar-section-title">Ranking Model</div>
         <label class="toggle-row" for="reranker">
@@ -1158,6 +884,7 @@
         </label>
       </div>
 
+      <!-- Context Depth -->
       <div class="control-block">
         <div class="sidebar-section-title">Context Depth</div>
         <div class="slider-container">
@@ -1166,31 +893,18 @@
             <span class="slider-val-badge" id="top_k_val">5</span>
           </div>
           <input type="range" id="top_k" min="1" max="10" value="5" oninput="document.getElementById('top_k_val').innerText = this.value">
-          <div class="control-desc">
-            Candidate context chunks supplied to generator.
-          </div>
+          <div class="control-desc">Candidate context chunks supplied to generator.</div>
         </div>
       </div>
 
-      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px;">
+      <!-- System Telemetry -->
+      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px;">
         <div class="sidebar-section-title">System Telemetry</div>
         <div class="info-card">
-          <div class="info-item">
-            <span class="info-name">Generator</span>
-            <span class="info-val">GPT-4o-mini / Groq</span>
-          </div>
-          <div class="info-item">
-            <span class="info-name">Embedding</span>
-            <span class="info-val">all-MiniLM-L6-v2</span>
-          </div>
-          <div class="info-item">
-            <span class="info-name">Vector DB</span>
-            <span class="info-val">ChromaDB (Cosine)</span>
-          </div>
-          <div class="info-item">
-            <span class="info-name">Verification</span>
-            <span class="info-val">LLM-as-a-Judge</span>
-          </div>
+          <div class="info-item"><span class="info-name">Generator</span><span class="info-val">GPT-4o-mini / Groq</span></div>
+          <div class="info-item"><span class="info-name">Embedding</span><span class="info-val">all-MiniLM-L6-v2</span></div>
+          <div class="info-item"><span class="info-name">Vector DB</span><span class="info-val">ChromaDB (Cosine)</span></div>
+          <div class="info-item"><span class="info-name">Multi-Turn (2A)</span><span class="info-val">Active (SQLite)</span></div>
         </div>
       </div>
     </aside>
@@ -1199,26 +913,30 @@
     <main class="chat-canvas">
       <div class="chat-scroll" id="chat">
 
-        <!-- Clean Restrained Overview Card (No AI Slop) -->
+        <!-- Overview Card -->
         <div class="overview-card" id="welcome-card">
           <div class="spotlight-eyebrow">Documentation Assistant</div>
           <h2 class="spotlight-headline">Grounded documentation search.</h2>
           <p class="spotlight-subhead">
-            Ask technical questions over the ingested corpus. Responses are strictly grounded against retrieved documentation chunks and evaluated for faithfulness.
+            Ask technical questions over pre-indexed docs or your uploaded PDFs and Markdown files. Responses are verified for faithfulness by an automated LLM judge.
           </p>
 
           <div class="spotlight-feature-row">
             <span class="feature-chip">
-              <svg class="icon chip-icon" width="12" height="12" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg class="icon" width="12" height="12" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
               <span>Verified Grounding</span>
             </span>
             <span class="feature-chip">
-              <svg class="icon chip-icon" width="12" height="12" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              <span>Sub-second Latency</span>
+              <svg class="icon" width="12" height="12" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Real-Time SSE Streaming</span>
             </span>
             <span class="feature-chip">
-              <svg class="icon chip-icon" width="12" height="12" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+              <svg class="icon" width="12" height="12" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
               <span>Cross-Encoder Reranked</span>
+            </span>
+            <span class="feature-chip">
+              <svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span>Custom File Uploads</span>
             </span>
           </div>
         </div>
@@ -1227,34 +945,24 @@
         <div class="suggestions-section" id="suggestions-container">
           <div class="suggestions-label">Suggested Queries</div>
           <div class="suggestions-grid">
-            <button class="btn-translucent" onclick="sendSuggestion('What is LangChain?')">
-              What is LangChain?
-            </button>
-            <button class="btn-translucent" onclick="sendSuggestion('How do I install LangChain?')">
-              How do I install LangChain?
-            </button>
-            <button class="btn-translucent" onclick="sendSuggestion('What is the difference between a Tool and an Agent?')">
-              Difference between Tool and Agent
-            </button>
-            <button class="btn-translucent" onclick="sendSuggestion('What vectorstores are supported?')">
-              Supported vectorstores
-            </button>
-            <button class="btn-translucent" onclick="sendSuggestion('How do I stream responses in LangChain?')">
-              Streaming responses
-            </button>
+            <button class="btn-translucent" onclick="sendSuggestion('What is LangChain?')">What is LangChain?</button>
+            <button class="btn-translucent" onclick="sendSuggestion('How do I install LangChain?')">How do I install LangChain?</button>
+            <button class="btn-translucent" onclick="sendSuggestion('What is the difference between a Tool and an Agent?')">Difference between Tool and Agent</button>
+            <button class="btn-translucent" onclick="sendSuggestion('What vectorstores are supported?')">Supported vectorstores</button>
+            <button class="btn-translucent" onclick="sendSuggestion('How do I stream responses in LangChain?')">Streaming responses</button>
           </div>
         </div>
 
       </div>
 
-      <!-- Floating Bottom Docked Input Bar -->
+      <!-- Floating Input Bar -->
       <div class="input-dock">
         <div class="input-pill-wrapper">
           <input
             type="text"
             id="prompt"
             class="query-input"
-            placeholder="Ask a technical question about the documentation..."
+            placeholder="Ask a question over documentation or your uploaded files..."
             autocomplete="off"
             onkeydown="if(event.key==='Enter') submitQuestion()"
           >
@@ -1267,21 +975,32 @@
     </main>
   </div>
 
-  <!-- Benchmark History Modal -->
+  <!-- Slide-Out Full-Document Context Viewer (2D) -->
+  <div class="doc-viewer-drawer" id="docViewerDrawer">
+    <div class="doc-viewer-header">
+      <div>
+        <div style="font-size: 11px; text-transform: uppercase; color: var(--ink-muted); letter-spacing: 0.06em;">Document Context</div>
+        <div class="doc-viewer-title" id="viewerDocTitle">document.md</div>
+      </div>
+      <button class="btn-close" onclick="closeDocViewer()">
+        <svg class="icon" width="12" height="12" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="doc-viewer-body" id="viewerDocBody">Loading document content...</div>
+  </div>
+
+  <!-- Benchmark Modal -->
   <div class="modal-backdrop" id="benchmark-modal" onclick="if(event.target===this) closeBenchmarkModal()">
     <div class="modal-card">
       <div class="modal-header">
         <div>
           <h3 class="modal-title">Evaluation Benchmark</h3>
-          <p style="font-size: 12.5px; color: var(--ink-muted); margin-top: 4px;">
-            Recent retrieval accuracy and faithfulness runs logged in SQLite.
-          </p>
+          <p style="font-size: 12.5px; color: var(--ink-muted); margin-top: 4px;">Recent retrieval accuracy and faithfulness runs logged in SQLite.</p>
         </div>
         <button class="btn-close" onclick="closeBenchmarkModal()">
           <svg class="icon" width="12" height="12" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-
       <div id="benchmark-table-container">
         <div style="padding: 24px; text-align: center; color: var(--ink-muted);">Loading benchmark logs...</div>
       </div>
@@ -1289,13 +1008,48 @@
   </div>
 
   <script>
-    // Segmented Chunking Controller
+    // State management (Session 2A & Audit Log 2F)
+    let currentSessionId = localStorage.getItem('docsrag_session_id') || crypto.randomUUID();
+    localStorage.setItem('docsrag_session_id', currentSessionId);
+    let sessionHistory = []; // In-memory store for export (2F)
+
+    // On Load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadDocumentList();
+      setupDropzone();
+    });
+
+    function startNewSession() {
+      currentSessionId = crypto.randomUUID();
+      localStorage.setItem('docsrag_session_id', currentSessionId);
+      sessionHistory = [];
+      const chat = document.getElementById('chat');
+      // Keep welcome card and suggestions
+      const welcomeCard = document.getElementById('welcome-card');
+      const suggestions = document.getElementById('suggestions-container');
+      chat.innerHTML = '';
+      if (welcomeCard) chat.appendChild(welcomeCard);
+      if (suggestions) chat.appendChild(suggestions);
+      if (welcomeCard) welcomeCard.style.display = 'block';
+      if (suggestions) suggestions.style.display = 'block';
+    }
+
+    // Corpus Selector
+    function setCorpus(val) {
+      document.getElementById('corpus').value = val;
+      ['all', 'langchain', 'user'].forEach(c => {
+        const btn = document.getElementById(`tab-corpus-${c}`);
+        if (c === val) btn.classList.add('selected');
+        else btn.classList.remove('selected');
+      });
+    }
+
+    // Chunking Selector
     function setChunking(mode) {
       document.getElementById('chunking').value = mode;
       const recTab = document.getElementById('tab-recursive');
       const hdrTab = document.getElementById('tab-header');
       const desc = document.getElementById('chunking-desc');
-
       if (mode === 'recursive') {
         recTab.classList.add('selected');
         hdrTab.classList.remove('selected');
@@ -1307,6 +1061,146 @@
       }
     }
 
+    // Dropzone & File Upload Handling
+    function setupDropzone() {
+      const dropZone = document.getElementById('dropZone');
+      ['dragenter', 'dragover'].forEach(name => {
+        dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+      });
+      ['dragleave', 'drop'].forEach(name => {
+        dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); });
+      });
+      dropZone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        if (dt && dt.files && dt.files.length) {
+          uploadFiles(dt.files);
+        }
+      });
+    }
+
+    function handleFileSelect(e) {
+      if (e.target.files && e.target.files.length) {
+        uploadFiles(e.target.files);
+      }
+    }
+
+    async function uploadFiles(fileList) {
+      const formData = new FormData();
+      for (let i = 0; i < fileList.length; i++) {
+        formData.append('files', fileList[i]);
+      }
+
+      const dropZone = document.getElementById('dropZone');
+      const originalText = dropZone.querySelector('.upload-text').innerText;
+      dropZone.querySelector('.upload-text').innerText = 'Indexing & Embedding...';
+
+      try {
+        const res = await fetch('/documents/upload', {
+          method: 'POST',
+          body: formData
+        });
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.detail || 'Upload failed');
+        }
+        await loadDocumentList();
+      } catch (err) {
+        alert('Upload Error: ' + err.message);
+      } finally {
+        dropZone.querySelector('.upload-text').innerText = originalText;
+        document.getElementById('fileUploadInput').value = '';
+      }
+    }
+
+    async function loadDocumentList() {
+      const container = document.getElementById('docListContainer');
+      const badge = document.getElementById('doc-count-badge');
+      try {
+        const res = await fetch('/documents');
+        const docs = await res.json();
+        badge.innerText = `${docs.length} file${docs.length === 1 ? '' : 's'}`;
+
+        if (!docs.length) {
+          container.innerHTML = '<div style="font-size:11px; color:var(--ink-faint); padding:6px 0;">No custom files yet.</div>';
+          return;
+        }
+
+        container.innerHTML = docs.map(d => {
+          const sizeKb = (d.size_bytes / 1024).toFixed(0);
+          return `
+            <div class="doc-item">
+              <span class="doc-item-title" title="${escapeHtml(d.filename)}" onclick="openDocViewer('${escapeHtml(d.filename)}')">${escapeHtml(d.filename)}</span>
+              <span class="doc-item-meta">${sizeKb}KB · ${d.chunks} chunks</span>
+              <button class="doc-delete-btn" onclick="deleteDocument('${escapeHtml(d.filename)}')" title="Delete document">
+                <svg class="icon" width="12" height="12" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              </button>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        container.innerHTML = '<div style="font-size:11px; color:var(--semantic-danger);">Could not load documents.</div>';
+      }
+    }
+
+    async function deleteDocument(filename) {
+      if (!confirm(`Delete '${filename}' and remove its chunks from search?`)) return;
+      try {
+        const res = await fetch(`/documents/${encodeURIComponent(filename)}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Deletion failed.');
+        await loadDocumentList();
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    // Full-Document Context Viewer (2D)
+    async function openDocViewer(docId, highlightChunk = null) {
+      const drawer = document.getElementById('docViewerDrawer');
+      const title = document.getElementById('viewerDocTitle');
+      const body = document.getElementById('viewerDocBody');
+
+      drawer.classList.add('open');
+      title.innerText = docId;
+      body.innerHTML = 'Loading document content...';
+
+      try {
+        const res = await fetch(`/documents/raw?doc_id=${encodeURIComponent(docId)}`);
+        if (!res.ok) throw new Error(`Document could not be loaded (${res.status})`);
+        const data = await res.json();
+
+        let raw = escapeHtml(data.content);
+
+        // Highlight snippet if provided
+        if (highlightChunk && highlightChunk.length > 20) {
+          const cleanedSnippet = escapeHtml(highlightChunk.trim().substring(0, 80));
+          if (raw.includes(cleanedSnippet)) {
+            raw = raw.replace(cleanedSnippet, `<mark class="chunk-highlight" id="citedChunkTarget">${cleanedSnippet}</mark>`);
+          }
+        }
+
+        body.innerHTML = raw;
+
+        // Auto-scroll to cited target
+        const target = document.getElementById('citedChunkTarget');
+        if (target) {
+          setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+        }
+      } catch (err) {
+        body.innerHTML = `<span style="color:var(--semantic-danger);">${escapeHtml(err.message)}</span>`;
+      }
+    }
+
+    function closeDocViewer() {
+      document.getElementById('docViewerDrawer').classList.remove('open');
+    }
+
+    function openDocViewerFromSource(idx) {
+      if (window.currentRetrievedSources && window.currentRetrievedSources[idx]) {
+        const s = window.currentRetrievedSources[idx];
+        openDocViewer(s.doc_id, s.text);
+      }
+    }
+
     function sendSuggestion(q) {
       document.getElementById('prompt').value = q;
       submitQuestion();
@@ -1314,45 +1208,34 @@
 
     function escapeHtml(str) {
       if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
-    // Markdown Formatter with Code, Citations & Headers
+    // Markdown Formatter with Code & Interactive Citations (2D)
     function formatMarkdown(text) {
       if (!text) return '';
       let formatted = escapeHtml(text);
 
-      // Code blocks ```lang\n...```
-      formatted = formatted.replace(/```(?:[a-zA-Z0-9_\-]+)?\n([\s\S]*?)```/g, function(match, code) {
-        return '<pre><code>' + code.trim() + '</code></pre>';
+      formatted = formatted.replace(/```(?:[a-zA-Z0-9_\-]+)?\n([\s\S]*?)```/g, (m, code) => `<pre><code>${code.trim()}</code></pre>`);
+      formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
+      
+      // Interactive citation tags that trigger openDocViewer
+      formatted = formatted.replace(/\[([a-zA-Z0-9_\-\.\/]+)#(\d+)\]/g, (m, doc, idx) => {
+        return `<span class="citation-tag" onclick="openDocViewer('${doc}')">
+          <svg class="icon" width="10" height="10" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span>[${doc}#${idx}]</span>
+        </span>`;
       });
 
-      // Inline code `...`
-      formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-      // Citations [doc_id#chunk_index]
-      formatted = formatted.replace(/\[([a-zA-Z0-9_\-\.\/]+#\d+)\]/g, '<span class="citation-tag">[$1]</span>');
-
-      // Bold **text**
       formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-
-      // Italic *text*
       formatted = formatted.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-
-      // Bullet lists
       formatted = formatted.replace(/(?:^|\n)\s*[-*]\s+(.+)/g, '<br>&bull; $1');
-
-      // Line breaks
       formatted = formatted.replace(/\n\n/g, '<br><br>');
       formatted = formatted.replace(/\n/g, '<br>');
-
       return formatted;
     }
 
+    // Real-Time SSE Streaming Question Submitter (2B + 2A)
     async function submitQuestion() {
       const input = document.getElementById('prompt');
       const question = input.value.trim();
@@ -1361,131 +1244,149 @@
       const chat = document.getElementById('chat');
       const sendBtn = document.getElementById('sendBtn');
 
-      // Hide welcome card and suggestions on first query for clean focus
       const welcomeCard = document.getElementById('welcome-card');
       const suggestions = document.getElementById('suggestions-container');
       if (welcomeCard) welcomeCard.style.display = 'none';
       if (suggestions) suggestions.style.display = 'none';
 
-      // 1. Add User Message
+      // 1. Add User Message (White Accent Bubble)
       const userGroup = document.createElement('div');
       userGroup.className = 'msg-group';
-      userGroup.innerHTML = `
-        <div class="msg-user-container">
-          ${escapeHtml(question)}
-        </div>
-      `;
+      userGroup.innerHTML = `<div class="msg-user-container">${escapeHtml(question)}</div>`;
       chat.appendChild(userGroup);
 
       input.value = '';
       sendBtn.disabled = true;
 
-      // 2. Add Loading Message
-      const loadingGroup = document.createElement('div');
-      loadingGroup.className = 'msg-group';
-      loadingGroup.id = 'active-loading';
-      loadingGroup.innerHTML = `
+      // 2. Add Assistant Message Card (Streaming container)
+      const assistGroup = document.createElement('div');
+      assistGroup.className = 'msg-group';
+      assistGroup.innerHTML = `
         <div class="msg-assistant-card">
-          <div class="loading-pulse">
-            <div class="loading-spinner"></div>
-            <span>Searching documentation chunks and verifying groundedness...</span>
+          <div class="msg-header"><span>DocsRAG Response</span></div>
+          <div class="msg-content" id="activeStreamContent"><em>Retrieving context chunks...</em></div>
+          <div class="msg-meta-bar" id="activeStreamMeta" style="display: none;">
+            <span class="meta-pill" id="activeGroundedPill"></span>
+            <span class="meta-pill pill-latency" id="activeLatencyPill"></span>
+            <button class="sources-toggle-btn" id="activeSourcesBtn" onclick="toggleSources(this)">
+              <span id="activeSourcesCount">0 sources</span>
+              <svg class="icon chevron-icon" width="11" height="11" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
           </div>
+          <div class="sources-tray" id="activeSourcesTray" style="display: none;"></div>
         </div>
       `;
-      chat.appendChild(loadingGroup);
+      chat.appendChild(assistGroup);
       chat.scrollTop = chat.scrollHeight;
 
       const payload = {
         question: question,
         chunking: document.getElementById('chunking').value,
         use_reranker: document.getElementById('reranker').checked,
-        top_k: parseInt(document.getElementById('top_k').value)
+        top_k: parseInt(document.getElementById('top_k').value),
+        corpus: document.getElementById('corpus').value,
+        session_id: currentSessionId,
       };
 
+      let accumulatedText = "";
+      let retrievedSources = [];
+
       try {
-        const res = await fetch('/ask', {
+        const response = await fetch('/ask/stream', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
 
-        if (!res.ok) {
-          throw new Error(`Server returned HTTP ${res.status}: ${res.statusText}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n\n');
+          buffer = lines.pop(); // keep remainder
+
+          for (const rawEvent of lines) {
+            if (!rawEvent.trim()) continue;
+            const eventParts = rawEvent.split('\n');
+            let eventType = "message";
+            let eventData = "";
+
+            for (const line of eventParts) {
+              if (line.startsWith('event:')) eventType = line.replace('event:', '').trim();
+              else if (line.startsWith('data:')) eventData = line.replace('data:', '').trim();
+            }
+
+            if (!eventData) continue;
+            const dataObj = JSON.parse(eventData);
+
+            if (eventType === "metadata") {
+              retrievedSources = dataObj.sources || [];
+              document.getElementById('activeStreamContent').innerHTML = "";
+            } else if (eventType === "token") {
+              accumulatedText += dataObj.delta;
+              document.getElementById('activeStreamContent').innerHTML = formatMarkdown(accumulatedText);
+              chat.scrollTop = chat.scrollHeight;
+            } else if (eventType === "done") {
+              // Finalize verification & sources
+              const metaBar = document.getElementById('activeStreamMeta');
+              const groundedPill = document.getElementById('activeGroundedPill');
+              const latencyPill = document.getElementById('activeLatencyPill');
+              const sourcesCount = document.getElementById('activeSourcesCount');
+              const sourcesTray = document.getElementById('activeSourcesTray');
+
+              metaBar.style.display = 'flex';
+              latencyPill.innerText = `${dataObj.total_latency_ms} ms`;
+
+              if (dataObj.grounded) {
+                groundedPill.className = 'meta-pill pill-grounded-true';
+                groundedPill.innerHTML = `<svg class="icon" width="11" height="11" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Grounded</span>`;
+              } else {
+                groundedPill.className = 'meta-pill pill-grounded-false';
+                groundedPill.innerHTML = `<svg class="icon" width="11" height="11" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Unverified</span>`;
+              }
+
+              window.currentRetrievedSources = retrievedSources;
+              sourcesCount.innerText = `${retrievedSources.length} sources`;
+              sourcesTray.innerHTML = retrievedSources.map((s, idx) => `
+                <div class="source-card">
+                  <div class="source-card-header">
+                    <span class="source-doc-id" onclick="openDocViewerFromSource(${idx})">[${escapeHtml(s.doc_id)}#${s.chunk_index}]</span>
+                    <span class="source-score">Relevance ${s.score.toFixed(3)}</span>
+                  </div>
+                  <div class="source-snippet">${escapeHtml(s.text)}</div>
+                  <span class="source-inspect-action" onclick="openDocViewerFromSource(${idx})">Open in Context Reader &nearr;</span>
+                </div>
+              `).join('');
+
+              // Save in-memory turn for Export (2F)
+              sessionHistory.push({
+                question: question,
+                answer: accumulatedText,
+                sources: retrievedSources,
+                grounded: dataObj.grounded,
+                latency_ms: dataObj.total_latency_ms,
+                timestamp: new Date().toISOString()
+              });
+            } else if (eventType === "error") {
+              throw new Error(dataObj.error);
+            }
+          }
         }
-
-        const data = await res.json();
-        const loader = document.getElementById('active-loading');
-        if (loader) loader.remove();
-
-        const assistGroup = document.createElement('div');
-        assistGroup.className = 'msg-group';
-
-        const isGrounded = data.grounded === true;
-        const groundedPill = isGrounded
-          ? `<span class="meta-pill pill-grounded-true">
-               <svg class="icon" width="11" height="11" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-               <span>Grounded</span>
-             </span>`
-          : `<span class="meta-pill pill-grounded-false">
-               <svg class="icon" width="11" height="11" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-               <span>Unverified</span>
-             </span>`;
-
-        let html = `
-          <div class="msg-assistant-card">
-            <div class="msg-header">
-              <span>DocsRAG Response</span>
-            </div>
-
-            <div class="msg-content">
-              ${formatMarkdown(data.answer)}
-            </div>
-
-            <div class="msg-meta-bar">
-              ${groundedPill}
-              <span class="meta-pill pill-latency">
-                <span>${data.latency_ms.toFixed(0)} ms</span>
-              </span>
-              <button class="sources-toggle-btn" onclick="toggleSources(this)">
-                <span>${data.sources.length} sources</span>
-                <svg class="icon chevron-icon" width="11" height="11" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-            </div>
-
-            <div class="sources-tray" style="display: none;">
-        `;
-
-        data.sources.forEach((s) => {
-          html += `
-            <div class="source-card">
-              <div class="source-card-header">
-                <span class="source-doc-id">[${escapeHtml(s.doc_id)}#${s.chunk_index}]</span>
-                <span class="source-score">Relevance ${s.score.toFixed(3)}</span>
-              </div>
-              <div class="source-snippet">${escapeHtml(s.text)}</div>
-            </div>
-          `;
-        });
-
-        html += `
-            </div>
-          </div>
-        `;
-
-        assistGroup.innerHTML = html;
-        chat.appendChild(assistGroup);
       } catch (err) {
-        const loader = document.getElementById('active-loading');
-        if (loader) {
-          loader.innerHTML = `
-            <div class="msg-assistant-card" style="border-color: rgba(239,68,68,0.3);">
-              <div style="color: var(--semantic-danger); font-size: 13.5px;">
-                <strong>Query Error:</strong> ${escapeHtml(err.message)}
-              </div>
-            </div>
-          `;
-        }
+        document.getElementById('activeStreamContent').innerHTML = `<span style="color:var(--semantic-danger);">Query Error: ${escapeHtml(err.message)}</span>`;
       } finally {
+        // Strip active IDs so subsequent queries get fresh nodes
+        ['activeStreamContent', 'activeStreamMeta', 'activeGroundedPill', 'activeLatencyPill', 'activeSourcesBtn', 'activeSourcesCount', 'activeSourcesTray'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.removeAttribute('id');
+        });
         sendBtn.disabled = false;
         chat.scrollTop = chat.scrollHeight;
         input.focus();
@@ -1496,16 +1397,60 @@
       const card = btn.closest('.msg-assistant-card');
       const tray = card.querySelector('.sources-tray');
       const isOpen = tray.style.display !== 'none';
-      if (isOpen) {
-        tray.style.display = 'none';
-        btn.classList.remove('open');
-      } else {
-        tray.style.display = 'flex';
-        btn.classList.add('open');
-      }
+      tray.style.display = isOpen ? 'none' : 'flex';
+      btn.classList.toggle('open', !isOpen);
     }
 
-    // Benchmark Modal Controller
+    // Export Handlers (2F)
+    function toggleExportMenu(e) {
+      e.stopPropagation();
+      document.getElementById('exportMenu').classList.toggle('show');
+    }
+    window.addEventListener('click', () => document.getElementById('exportMenu').classList.remove('show'));
+
+    function exportSessionMarkdown() {
+      if (!sessionHistory.length) return alert('No chat turns in active session to export.');
+      let md = `# DocsRAG Session Transcript\n\n`;
+      md += `**Date:** ${new Date().toLocaleString()}\n`;
+      md += `**Session ID:** \`${currentSessionId}\`\n`;
+      md += `**Total Queries:** ${sessionHistory.length}\n\n---\n\n`;
+
+      sessionHistory.forEach((turn, i) => {
+        md += `### ${i + 1}. User Question\n${turn.question}\n\n`;
+        md += `#### Assistant Response (${turn.grounded ? '✓ Grounded' : '⚠ Unverified'} · ${turn.latency_ms} ms)\n${turn.answer}\n\n`;
+        if (turn.sources && turn.sources.length) {
+          md += `**Cited Sources:**\n`;
+          turn.sources.forEach(s => {
+            md += `- \`[${s.doc_id}#${s.chunk_index}]\` (Relevance: ${s.score.toFixed(3)})\n`;
+          });
+        }
+        md += `\n---\n\n`;
+      });
+
+      downloadFile(md, `DocsRAG_Session_${currentSessionId.substring(0, 8)}.md`, 'text/markdown');
+    }
+
+    function exportSessionJSON() {
+      if (!sessionHistory.length) return alert('No chat turns in active session to export.');
+      const data = {
+        session_id: currentSessionId,
+        exported_at: new Date().toISOString(),
+        turns: sessionHistory
+      };
+      downloadFile(JSON.stringify(data, null, 2), `DocsRAG_Audit_${currentSessionId.substring(0, 8)}.json`, 'application/json');
+    }
+
+    function downloadFile(content, filename, type) {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Benchmark Modal
     async function openBenchmarkModal() {
       const modal = document.getElementById('benchmark-modal');
       const container = document.getElementById('benchmark-table-container');
@@ -1516,58 +1461,33 @@
         if (!res.ok) throw new Error('Failed to load benchmark rows.');
         const rows = await res.json();
 
-        if (!rows || rows.length === 0) {
-          container.innerHTML = `
-            <div style="padding: 32px; text-align: center; color: var(--ink-muted);">
-              No evaluation runs found in SQLite yet.<br>
-              <span style="font-size: 12px; margin-top: 6px; display: inline-block;">
-                Run <code>python scripts/compare_configs.py</code> to benchmark all 4 configurations.
-              </span>
-            </div>
-          `;
+        if (!rows.length) {
+          container.innerHTML = '<div style="padding:28px; text-align:center; color:var(--ink-muted);">No benchmark runs found. Run <code>python scripts/compare_configs.py</code> first.</div>';
           return;
         }
 
-        let tableHtml = `
+        container.innerHTML = `
           <table class="benchmark-table">
             <thead>
-              <tr>
-                <th>Config</th>
-                <th>Hit@1</th>
-                <th>Hit@5</th>
-                <th>Hit@10</th>
-                <th>MRR</th>
-                <th>Faithfulness</th>
-                <th>Latency</th>
-              </tr>
+              <tr><th>Config</th><th>Hit@1</th><th>Hit@5</th><th>Hit@10</th><th>MRR</th><th>Faithfulness</th><th>Latency</th></tr>
             </thead>
             <tbody>
+              ${rows.map(r => `
+                <tr>
+                  <td style="color:var(--ink); font-weight:500;">${escapeHtml(r.config)}</td>
+                  <td>${(r.hit_at_1 * 100).toFixed(0)}%</td>
+                  <td>${(r.hit_at_5 * 100).toFixed(0)}%</td>
+                  <td>${(r.hit_at_10 * 100).toFixed(0)}%</td>
+                  <td>${r.mrr.toFixed(3)}</td>
+                  <td style="color:${r.faithfulness >= 0.8 ? 'var(--semantic-success)' : 'inherit'};">${(r.faithfulness * 100).toFixed(0)}%</td>
+                  <td>${r.avg_latency_ms.toFixed(0)} ms</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
         `;
-
-        rows.forEach(r => {
-          tableHtml += `
-            <tr>
-              <td style="color: var(--ink); font-weight: 500;">${escapeHtml(r.config)}</td>
-              <td>${(r.hit_at_1 * 100).toFixed(0)}%</td>
-              <td>${(r.hit_at_5 * 100).toFixed(0)}%</td>
-              <td>${(r.hit_at_10 * 100).toFixed(0)}%</td>
-              <td>${r.mrr.toFixed(3)}</td>
-              <td style="color: ${r.faithfulness >= 0.8 ? 'var(--semantic-success)' : 'inherit'};">
-                ${(r.faithfulness * 100).toFixed(0)}%
-              </td>
-              <td>${r.avg_latency_ms.toFixed(0)} ms</td>
-            </tr>
-          `;
-        });
-
-        tableHtml += `</tbody></table>`;
-        container.innerHTML = tableHtml;
       } catch (e) {
-        container.innerHTML = `
-          <div style="padding: 24px; text-align: center; color: var(--semantic-danger);">
-            Could not fetch evaluation records: ${escapeHtml(e.message)}
-          </div>
-        `;
+        container.innerHTML = `<div style="padding:24px; text-align:center; color:var(--semantic-danger);">${escapeHtml(e.message)}</div>`;
       }
     }
 

@@ -44,32 +44,49 @@ def _embed_query(query: str, model: str) -> list[float]:
 
 def retrieve(
     query: str,
-    collection_name: str,
+    collection_name: str | list[str],
     top_k: int = 20,
     db_path: str = "db/chroma",
     embed_model: str = "all-MiniLM-L6-v2",
 ) -> list[Source]:
     """Dense retrieval from Chroma. Returns top_k Sources sorted by score desc."""
+    col_names = [collection_name] if isinstance(collection_name, str) else collection_name
     client = _get_chroma(db_path)
-    col = client.get_collection(collection_name)
     qemb = _embed_query(query, embed_model)
-    results = col.query(
-        query_embeddings=[qemb],
-        n_results=min(top_k, col.count()),
-        include=["documents", "metadatas", "distances"],
-    )
-    sources = []
-    docs = results["documents"][0]
-    metas = results["metadatas"][0]
-    dists = results["distances"][0]
-    for doc, meta, dist in zip(docs, metas, dists):
-        sources.append(
-            Source(
-                doc_id=meta.get("source", ""),
-                chunk_index=int(meta.get("chunk_index", 0)),
-                text=doc,
-                score=float(1 - dist),  # cosine distance → similarity
-                header_path=meta.get("header_path"),
-            )
+
+    all_sources: list[Source] = []
+    for cname in col_names:
+        try:
+            col = client.get_collection(cname)
+        except Exception:
+            continue
+
+        count = col.count()
+        if count == 0:
+            continue
+
+        results = col.query(
+            query_embeddings=[qemb],
+            n_results=min(top_k, count),
+            include=["documents", "metadatas", "distances"],
         )
-    return sources
+        if not results or not results.get("documents") or not results["documents"][0]:
+            continue
+
+        docs = results["documents"][0]
+        metas = results["metadatas"][0]
+        dists = results["distances"][0]
+        for doc, meta, dist in zip(docs, metas, dists):
+            all_sources.append(
+                Source(
+                    doc_id=meta.get("source", ""),
+                    chunk_index=int(meta.get("chunk_index", 0)),
+                    text=doc,
+                    score=float(1 - dist),  # cosine distance → similarity
+                    header_path=meta.get("header_path"),
+                )
+            )
+
+    all_sources.sort(key=lambda s: s.score, reverse=True)
+    return all_sources[:top_k]
+

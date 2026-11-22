@@ -22,8 +22,9 @@ db/eval.db*
 *.db-wal
 *.db-shm
 
-# Downloaded docs corpus
+# Downloaded docs corpus & user uploads
 data/docs/
+data/user_uploads/
 _tmp_lc/
 
 # pytest / coverage
