@@ -1,4 +1,4 @@
-# ⚡ DocsRAG
+# DocsRAG
 
 <p align="center">
   <strong>Production-Grade Retrieval-Augmented Documentation Assistant</strong><br>
